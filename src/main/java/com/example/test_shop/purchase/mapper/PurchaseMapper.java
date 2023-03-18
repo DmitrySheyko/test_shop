@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class PurchaseMapper {
 
     public static Purchase toPurchase(NewPurchaseDto purchaseDto, Company company, User buyer, User seller,
-                                      Product product, Double totalSum, Double shopComission) {
+                                      Product product, Double totalSum, Double shopCommission) {
         if (purchaseDto == null) {
             return null;
 
@@ -28,7 +28,7 @@ public class PurchaseMapper {
                     .quantity(purchaseDto.getQuantity())
                     .priceForUnit(purchaseDto.getPriceForUnit())
                     .totalSum(totalSum)
-                    .shopComission(shopComission)
+                    .shopCommission(shopCommission)
                     .build();
         }
     }

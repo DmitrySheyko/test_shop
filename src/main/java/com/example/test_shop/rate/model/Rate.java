@@ -25,12 +25,12 @@ public class Rate {
     @Column(name = "rate")
     private Integer rate;
 
-    @Column(name = "user_id")
     @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(name = "product_id")
     @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
     @Column(name = "created_on")

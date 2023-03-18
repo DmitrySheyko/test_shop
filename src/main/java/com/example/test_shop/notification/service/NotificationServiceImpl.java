@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -31,6 +32,7 @@ public class NotificationServiceImpl implements NotificationService {
                 .orElseThrow(() -> new NotFoundException(String
                         .format("Notification didn't add. User id=%s not found", notificationDto.getUserId())));
         Notification newNotification = NotificationMapper.toNotification(notificationDto, user);
+        newNotification.setCreatedOn(LocalDateTime.now());
         newNotification = repository.save(newNotification);
         NotificationDto newNotificationDto = NotificationMapper.toDto(newNotification, UserMapper.toUserShortDto(user));
         log.info("Notification id={} successfully add", newNotification.getId());

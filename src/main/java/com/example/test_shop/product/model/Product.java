@@ -10,7 +10,7 @@ import lombok.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "Companies")
+@Table(name = "products")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -30,8 +30,8 @@ public class Product {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "company_id")
     @ManyToOne
+    @JoinColumn(name = "company_id", nullable = false)
     private Company company;
 
     @Column(name = "price")
@@ -44,7 +44,7 @@ public class Product {
     @ManyToOne
     private Discount discount;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Set<Comment> commentsSet;
 
     @Column(name = "key_words")
@@ -53,7 +53,7 @@ public class Product {
     @Column(name = "characteristics")
     private String characteristics;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Set<Rate> ratesSet;
 
 }

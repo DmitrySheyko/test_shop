@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 @Transactional
 public class PurchaseServiceImpl implements PurchaseService {
 
-    private static final float COMISSION_OF_SHOP = 0.05F;
+    private static final float COMMISSION_OF_SHOP = 0.05F;
 
     private final PurchaseRepository repository;
     private final UserRepository userRepository;
@@ -48,7 +48,7 @@ public class PurchaseServiceImpl implements PurchaseService {
                 purchaseDto.getQuantity());
 
         Double totalSum = purchaseDto.getPriceForUnit() * purchaseDto.getQuantity();
-        double shopComissionSum = totalSum * COMISSION_OF_SHOP;
+        double shopCommissionSum = totalSum * COMMISSION_OF_SHOP;
 
         // Вычитаем купленный товар из складских запасов
         product.setQuantity(product.getQuantity() - purchaseDto.getQuantity());
@@ -59,12 +59,12 @@ public class PurchaseServiceImpl implements PurchaseService {
         userRepository.save(buyer);
 
         // Зачисляем на счет продавца стоимость покупки за вычетом комиссии 5%
-        seller.setBalance(seller.getBalance() + totalSum - shopComissionSum);
+        seller.setBalance(seller.getBalance() + totalSum - shopCommissionSum);
         userRepository.save(seller);
 
         // Сохраняем данные о покупке
         Purchase purchase = PurchaseMapper.toPurchase(purchaseDto, sellCompany, buyer, seller, product, totalSum,
-                shopComissionSum);
+                shopCommissionSum);
         purchase.setPurchaseDateTime(LocalDateTime.now());
         purchase = repository.save(purchase);
 

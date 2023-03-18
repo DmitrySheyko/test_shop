@@ -28,8 +28,8 @@ public class Company {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "owner_id")
     @ManyToOne
+    @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 
     @Column(name = "logo_url")
@@ -39,6 +39,7 @@ public class Company {
     @Enumerated(EnumType.STRING)
     private CompanyStatus status;
 
+    @OneToMany
     private Set<Product> productsSet;
 
 }

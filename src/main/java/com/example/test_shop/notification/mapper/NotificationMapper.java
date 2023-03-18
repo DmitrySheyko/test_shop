@@ -32,6 +32,7 @@ public class NotificationMapper {
                     .id(notification.getId())
                     .text(notification.getText())
                     .user(userShortDto)
+                    .createdOn(notification.getCreatedOn())
                     .build();
         }
     }

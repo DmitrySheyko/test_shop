@@ -48,8 +48,8 @@ public class Purchase {
     @Column(name = "total_sum")
     private Double totalSum;
 
-    @Column(name = "shop_comission")
-    private Double shopComission;
+    @Column(name = "shop_commission_sum")
+    private Double shopCommission;
 
     @Column(name = "purchase_date_time")
     private LocalDateTime purchaseDateTime;

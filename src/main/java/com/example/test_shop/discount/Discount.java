@@ -20,6 +20,9 @@ public class Discount {
     @EqualsAndHashCode.Include
     private Long id;
 
+    @Column(name = "description")
+    private String description;
+
     @Column(name = "discount_value")
     private Double value;
 

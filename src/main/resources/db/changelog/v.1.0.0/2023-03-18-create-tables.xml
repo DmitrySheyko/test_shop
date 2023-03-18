@@ -1,0 +1,274 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.17.xsd">
+
+    <changeSet id="2023-03-18-create-table-users" author="DmitrySheyko">
+        <createTable tableName="users">
+            <column name="id" type="bigint" generationType="identity">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="username" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="balance" type="money">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_status" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addAutoIncrement columnDataType="bigint"
+                          columnName="id"
+                          defaultOnNull="false"
+                          generationType="ALWAYS"
+                          incrementBy="1"
+                          schemaName="public"
+                          startWith="1"
+                          tableName="users"/>
+        <addUniqueConstraint columnNames="email"
+                             constraintName="unique_users_email"
+                             tableName="users"
+                             validate="true"/>
+    </changeSet>
+
+    <changeSet id="2023-03-18-create-table-companies" author="DmitrySheyko">
+        <createTable tableName="companies">
+            <column name="id" type="bigint">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(1000)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="owner_id" type="bigint">
+                <constraints nullable="true" foreignKeyName="fk_companies_owner_id" references="user(id)"/>
+            </column>
+            <column name="logo_url" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="company_status" type="varchar(50)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <addAutoIncrement columnDataType="bigint"
+                          columnName="id"
+                          defaultOnNull="false"
+                          generationType="ALWAYS"
+                          incrementBy="1"
+                          schemaName="public"
+                          startWith="1"
+                          tableName="companies"/>
+        <addUniqueConstraint columnNames="logo_url"
+                             constraintName="unique_users_logo_url"
+                             tableName="companies"
+                             validate="true"/>
+    </changeSet>
+
+    <changeSet id="2023-02-10-create-table-discounts" author="DmitrySheyko">
+        <createTable tableName="discounts">
+            <column name="id" type="bigint">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="description" type="varchar(1000)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="discount_value" type="decimal">
+                <constraints nullable="false"/>
+            </column>
+            <column name="start_date_time" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="finish_date_time" type="timestamp(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addAutoIncrement columnDataType="bigint"
+                          columnName="id"
+                          defaultOnNull="false"
+                          generationType="ALWAYS"
+                          incrementBy="1"
+                          schemaName="public"
+                          startWith="1"
+                          tableName="discounts"/>
+    </changeSet>
+
+    <changeSet id="2023-03-18-create-table-products" author="DmitrySheyko">
+        <createTable tableName="products">
+            <column name="id" type="bigint">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(1000)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="company_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_companies_company_id" references="companies(id)"/>
+            </column>
+            <column name="price" type="money">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="discount_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_companies_discount_id" references="discounts(id)"/>
+            </column>
+            <column name="key_words" type="varchar(1000)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="characteristics" type="varchar(1000)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <addAutoIncrement columnDataType="bigint"
+                          columnName="id"
+                          defaultOnNull="false"
+                          generationType="ALWAYS"
+                          incrementBy="1"
+                          schemaName="public"
+                          startWith="1"
+                          tableName="products"/>
+    </changeSet>
+
+    <changeSet id="2023-03-18-create-table-purchases" author="DmitrySheyko">
+        <createTable tableName="purchases">
+            <column name="id" type="bigint">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="company_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_purchases_company_id" references="companies(id)"/>
+            </column>
+            <column name="seller_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_purchases_seller_id" references="users(id)"/>
+            </column>
+            <column name="buyer_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_purchases_buyer_id" references="users(id)"/>
+            </column>
+            <column name="product_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_purchases_product_id" references="products(id)"/>
+            </column>
+            <column name="quantity" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price_for_unit" type="money">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_sum" type="money">
+                <constraints nullable="false"/>
+            </column>
+            <column name="shop_commission_sum" type="money">
+                <constraints nullable="false"/>
+            </column>
+            <column name="purchase_date_time" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addAutoIncrement columnDataType="bigint"
+                          columnName="id"
+                          defaultOnNull="false"
+                          generationType="ALWAYS"
+                          incrementBy="1"
+                          schemaName="public"
+                          startWith="1"
+                          tableName="purchases"/>
+    </changeSet>
+
+    <changeSet id="2023-03-18-create-table-notifications" author="DmitrySheyko">
+        <createTable tableName="notifications">
+            <column name="id" type="bigint">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="text" type="varchar(1000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="true" foreignKeyName="fk_companies_user_id" references="user(id)"
+                             deleteCascade="true"/>
+            </column>
+            <column name="created_on" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addAutoIncrement columnDataType="bigint"
+                          columnName="id"
+                          defaultOnNull="false"
+                          generationType="ALWAYS"
+                          incrementBy="1"
+                          schemaName="public"
+                          startWith="1"
+                          tableName="notifications"/>
+    </changeSet>
+
+    <changeSet id="2023-03-18-create-table-comments" author="DmitrySheyko">
+        <createTable tableName="notifications">
+            <column name="id" type="bigint">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="text" type="varchar(1000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_companies_user_id" references="user(id)"
+                             deleteCascade="true"/>
+            </column>
+            <column name="product_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_companies_product_id" references="products(id)"
+                             deleteCascade="true"/>
+            </column>
+            <column name="created_on" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addAutoIncrement columnDataType="bigint"
+                          columnName="id"
+                          defaultOnNull="false"
+                          generationType="ALWAYS"
+                          incrementBy="1"
+                          schemaName="public"
+                          startWith="1"
+                          tableName="comments"/>
+    </changeSet>
+
+    <changeSet id="2023-03-18-create-table-rates" author="DmitrySheyko">
+        <createTable tableName="rates">
+            <column name="id" type="bigint">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="rate" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_companies_user_id" references="user(id)"
+                             deleteCascade="true"/>
+            </column>
+            <column name="product_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_companies_product_id" references="products(id)"
+                             deleteCascade="true"/>
+            </column>
+            <column name="created_on" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addAutoIncrement columnDataType="bigint"
+                          columnName="id"
+                          defaultOnNull="false"
+                          generationType="ALWAYS"
+                          incrementBy="1"
+                          schemaName="public"
+                          startWith="1"
+                          tableName="rates"/>
+    </changeSet>
+
+
+</databaseChangeLog>

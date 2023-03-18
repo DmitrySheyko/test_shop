@@ -4,6 +4,8 @@ import com.example.test_shop.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "notifications")
 @Getter
@@ -22,8 +24,11 @@ public class Notification {
     @Column(name = "text")
     private String text;
 
-//    @Column(name = "user_id")
     @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @Column(name = "created_on")
+    private LocalDateTime createdOn;
 
 }
