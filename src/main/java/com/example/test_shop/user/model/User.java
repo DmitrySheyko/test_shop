@@ -1,7 +1,11 @@
 package com.example.test_shop.user.model;
 
+import com.example.test_shop.notification.model.Notification;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -27,5 +31,13 @@ public class User {
     private String password;
 
     @Column(name = "balance")
-    private Double balance;
+    private Double balance = 0.0;
+
+    @Column(name = "user_status")
+    @Enumerated(EnumType.STRING)
+    private UserStatus status;
+
+    @OneToMany(cascade = CascadeType.REMOVE)
+    private Set<Notification> notificationSet = new HashSet<>();
+
 }

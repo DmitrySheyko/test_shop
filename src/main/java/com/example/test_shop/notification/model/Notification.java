@@ -22,7 +22,8 @@ public class Notification {
     @Column(name = "text")
     private String text;
 
-    @Column(name = "user_id")
+//    @Column(name = "user_id")
+    @ManyToOne
     private User user;
 
 }

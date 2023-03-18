@@ -1,6 +1,7 @@
-package com.example.test_shop.company;
+package com.example.test_shop.company.model;
 
 import com.example.test_shop.product.model.Product;
+import com.example.test_shop.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,8 +28,16 @@ public class Company {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "owner_id")
+    @ManyToOne
+    private User owner;
+
     @Column(name = "logo_url")
     private String logoUrl;
+
+    @Column(name = "company_status")
+    @Enumerated(EnumType.STRING)
+    private CompanyStatus status;
 
     private Set<Product> productsSet;
 

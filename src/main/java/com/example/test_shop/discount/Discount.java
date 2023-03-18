@@ -28,4 +28,5 @@ public class Discount {
 
     @Column(name = "finish_date_time")
     private LocalDateTime finishDateTime;
+
 }

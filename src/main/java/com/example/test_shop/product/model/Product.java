@@ -1,7 +1,7 @@
 package com.example.test_shop.product.model;
 
-import com.example.test_shop.comment.Comment;
-import com.example.test_shop.company.Company;
+import com.example.test_shop.comment.model.Comment;
+import com.example.test_shop.company.model.Company;
 import com.example.test_shop.discount.Discount;
 import com.example.test_shop.rate.model.Rate;
 import jakarta.persistence.*;
@@ -31,6 +31,7 @@ public class Product {
     private String description;
 
     @Column(name = "company_id")
+    @ManyToOne
     private Company company;
 
     @Column(name = "price")
@@ -40,17 +41,19 @@ public class Product {
     private Integer quantity;
 
     @Column(name = "discount_id")
+    @ManyToOne
     private Discount discount;
 
-    @Column(name = "")
+    @OneToMany
     private Set<Comment> commentsSet;
 
-    @Column(name = "")
-    private Set<String> keyWordsSet;
+    @Column(name = "key_words")
+    private String keyWords;
 
-    @Column(name = "")
+    @Column(name = "characteristics")
     private String characteristics;
 
-    @Column(name = "")
+    @OneToMany
     private Set<Rate> ratesSet;
+
 }
