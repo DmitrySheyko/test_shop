@@ -59,7 +59,8 @@ public class UserMapper {
                     .username(userDto.getUsername())
                     .email(userDto.getEmail())
                     .password(userDto.getPassword())
-                    .status(UserStatus.valueOf(userDto.getStatus()))
+                    .status(userDto.getStatus() == null ? null : UserStatus.valueOf(userDto.getStatus()))
+                    .balance(userDto.getBalance())
                     .build();
         }
     }

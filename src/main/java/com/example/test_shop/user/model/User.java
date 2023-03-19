@@ -31,7 +31,7 @@ public class User {
     private String password;
 
     @Column(name = "balance")
-    private Double balance = 0.0;
+    private Double balance;
 
     @Column(name = "user_status")
     @Enumerated(EnumType.STRING)

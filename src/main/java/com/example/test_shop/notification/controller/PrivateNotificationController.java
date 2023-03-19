@@ -16,7 +16,7 @@ public class PrivateNotificationController {
     private NotificationService service;
 
     @GetMapping("/{id}")
-    public Set<NotificationDto> getAllbyUserId(@Positive @PathVariable(value = "id") Long userId) {
+    public Set<NotificationDto> getAllByUserId(@Positive @PathVariable(value = "id") Long userId) {
         return service.getAllbyUserId(userId);
     }
 }

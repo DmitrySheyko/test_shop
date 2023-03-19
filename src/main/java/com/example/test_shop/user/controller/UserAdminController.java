@@ -16,12 +16,12 @@ public class UserAdminController {
     private final UserServiceImpl service;
 
     @PostMapping
-    public UserAdminDto add(@Valid NewUserDto userDto) {
+    public UserAdminDto add(@Valid @RequestBody NewUserDto userDto) {
         return service.add(userDto);
     }
 
     @PatchMapping("/{id}")
-    public UserAdminDto update(@Valid UserAdminUpdateDto userDto,
+    public UserAdminDto update(@Valid @RequestBody UserAdminUpdateDto userDto,
                                @Positive @PathVariable(value = "id") Long userId) {
         return service.update(userDto, userId);
     }

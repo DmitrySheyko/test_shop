@@ -2,7 +2,7 @@ package com.example.test_shop.product.model;
 
 import com.example.test_shop.comment.model.Comment;
 import com.example.test_shop.company.model.Company;
-import com.example.test_shop.discount.Discount;
+import com.example.test_shop.discount.model.Discount;
 import com.example.test_shop.rate.model.Rate;
 import jakarta.persistence.*;
 import lombok.*;
@@ -40,8 +40,8 @@ public class Product {
     @Column(name = "quantity")
     private Integer quantity;
 
-    @Column(name = "discount_id")
     @ManyToOne
+    @JoinColumn(name = "discount_id", nullable = false)
     private Discount discount;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)

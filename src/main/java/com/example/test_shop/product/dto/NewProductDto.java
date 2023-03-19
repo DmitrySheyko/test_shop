@@ -5,9 +5,5 @@ import lombok.Data;
 
 @Data
 @Builder
-public class ProductShortDto {
-
-    private Long id;
-    private String name;
-
+public class NewProductDto {
 }

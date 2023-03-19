@@ -1,20 +1,26 @@
 package com.example.test_shop.product.controller;
 
+import com.example.test_shop.product.dto.ProductDto;
 import com.example.test_shop.product.service.ProductService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/user/product")
+@RequestMapping("/user")
 public class productUserController {
 
     private final ProductService service;
 
-    // Добавление комментария о продукте
+    // Добавление нового товара
+    @PostMapping("/{id}/product")
+    public ProductDto add(@Valid @RequestBody NewProductDto productDto,
+                          @Positive @PathVariable(value = "id") Long userId){
+        return service.add(productDto, userId);
+    }
 
-    // Добавление оценки
 
 
 }

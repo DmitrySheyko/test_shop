@@ -1,9 +1,12 @@
-package com.example.test_shop.discount;
+package com.example.test_shop.discount.model;
 
+import com.example.test_shop.product.model.Product;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "discounts")
@@ -31,5 +34,8 @@ public class Discount {
 
     @Column(name = "finish_date_time")
     private LocalDateTime finishDateTime;
+
+    @OneToMany
+    private Set<Product> productsSet = new HashSet<>();
 
 }

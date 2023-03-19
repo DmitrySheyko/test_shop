@@ -23,20 +23,20 @@ public class Purchase {
     @EqualsAndHashCode.Include
     private String id;
 
-    @Column(name = "company_id")
     @ManyToOne
+    @JoinColumn(name = "company_id",nullable = false)
     private Company company;
 
-    @Column(name = "seller_id")
     @ManyToOne
+    @JoinColumn(name = "seller_id",nullable = false)
     private User seller;
 
-    @Column(name = "buyer_id")
     @ManyToOne
+    @JoinColumn(name = "buyer_id", nullable = false)
     private User buyer;
-
-    @Column(name = "product_id")
+    
     @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
     @Column(name = "quantity")

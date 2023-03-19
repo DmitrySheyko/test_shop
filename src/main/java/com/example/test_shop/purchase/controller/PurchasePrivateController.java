@@ -17,7 +17,7 @@ public class PurchasePrivateController {
     private final PurchaseService service;
 
     @PostMapping("/{id}")
-    public PurchaseBuyerDto add(@Valid NewPurchaseDto purchaseDto,
+    public PurchaseBuyerDto add(@Valid @RequestBody NewPurchaseDto purchaseDto,
                                 @Positive @PathVariable(value = "id") Long buyerId){
         return service.add(purchaseDto, buyerId);
     }

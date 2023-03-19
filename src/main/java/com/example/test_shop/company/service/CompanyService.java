@@ -8,7 +8,7 @@ import java.util.Set;
 
 public interface CompanyService {
 
-    CompanyDto add(NewCompanyDto companyDto);
+    CompanyDto add(NewCompanyDto companyDto, Long userId);
 
     String delete(Long companyId);
 

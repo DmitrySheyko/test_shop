@@ -6,6 +6,7 @@ import com.example.test_shop.company.dto.NewCompanyDto;
 import com.example.test_shop.company.dto.CompanyShortDto;
 import com.example.test_shop.company.model.Company;
 import com.example.test_shop.company.model.CompanyStatus;
+import com.example.test_shop.user.mapper.UserMapper;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -40,6 +41,7 @@ public class CompanyMapper {
             return CompanyDto.builder()
                     .id(company.getId())
                     .name(company.getName())
+                    .owner(UserMapper.toUserShortDto(company.getOwner()))
                     .description(company.getDescription())
                     .logoUrl(company.getLogoUrl())
                     .status(company.getStatus().name())

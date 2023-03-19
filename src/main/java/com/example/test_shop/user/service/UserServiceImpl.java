@@ -24,6 +24,7 @@ public class UserServiceImpl implements UserService {
     public UserAdminDto add(NewUserDto userDto) {
         User user = UserMapper.toUser(userDto);
         user.setStatus(UserStatus.ACTIVE);
+        user.setBalance(0.0);
         user = repository.save(user);
         UserAdminDto createdUserAdminDto = UserMapper.toUserDto(user);
         log.info("User id={} successfully created", user.getId());
