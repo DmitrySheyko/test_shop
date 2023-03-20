@@ -23,6 +23,9 @@
             <column name="user_status" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
+            <column name="role" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
         <addAutoIncrement columnDataType="bigint"
                           columnName="id"
@@ -32,8 +35,8 @@
                           schemaName="public"
                           startWith="1"
                           tableName="users"/>
-        <addUniqueConstraint columnNames="email"
-                             constraintName="unique_users_email"
+        <addUniqueConstraint columnNames="username"
+                             constraintName="unique_users_username"
                              tableName="users"
                              validate="true"/>
     </changeSet>

@@ -7,6 +7,11 @@ import lombok.*;
 
 import java.util.Set;
 
+/**
+ * Class of {@link Company} entity
+ *
+ * @author DmitrySheyko
+ */
 @Entity
 @Table(name = "companies")
 @Getter

@@ -7,6 +7,11 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
+/**
+ * Class of {@link Comment} entity
+ *
+ * @author DmitrySheyko
+ */
 @Entity
 @Table(name = "comments")
 @Getter

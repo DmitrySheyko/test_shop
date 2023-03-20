@@ -11,6 +11,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
+/**
+ * Class of mapper for {@link Product} entity
+ *
+ * @author DmitrySheyko
+ */
 @Component
 public class ProductMapper {
 

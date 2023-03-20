@@ -8,6 +8,11 @@ import com.example.test_shop.user.model.User;
 import com.example.test_shop.user.model.UserStatus;
 import org.springframework.stereotype.Component;
 
+/**
+ * Class of mapper for {@link User}
+ *
+ * @author DmitrySheyko
+ */
 @Component
 public class UserMapper {
 
@@ -47,6 +52,7 @@ public class UserMapper {
                     .username(userDto.getUsername())
                     .email(userDto.getEmail())
                     .password(userDto.getPassword())
+                    .role(userDto.getRole())
                     .build();
         }
     }

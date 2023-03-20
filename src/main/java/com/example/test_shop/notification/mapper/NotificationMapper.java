@@ -8,6 +8,11 @@ import com.example.test_shop.user.model.User;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+/**
+ * Class of mapper for {@link Notification} entity
+ *
+ * @author DmitrySheyko
+ */
 @Component
 @AllArgsConstructor
 public class NotificationMapper {

@@ -7,6 +7,11 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
+/**
+ * Class of {@link Rate} entity
+ *
+ * @author DmitrySheyko
+ */
 @Entity
 @Table(name = "rates")
 @Getter

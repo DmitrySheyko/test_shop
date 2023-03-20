@@ -2,12 +2,18 @@ package com.example.test_shop.rate.controller;
 
 import com.example.test_shop.rate.dto.NewRateDto;
 import com.example.test_shop.rate.dto.RateDto;
+import com.example.test_shop.rate.model.Rate;
 import com.example.test_shop.rate.service.RateService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Class of user's controller for creating new {@link Rate}
+ *
+ * @author DmitrySheyko
+ */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("user/{userId}/rate")

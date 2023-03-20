@@ -8,6 +8,11 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Class {@link Discount} entity
+ *
+ * @author DmitrySheyko
+ */
 @Entity
 @Table(name = "discounts")
 @Getter

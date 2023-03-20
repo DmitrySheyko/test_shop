@@ -26,6 +26,11 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Class of service for {@link Purchase} entity
+ *
+ * @author DmitrySheyko
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -45,7 +50,7 @@ public class PurchaseServiceImpl implements PurchaseService {
         User buyer = checkAndGetUser(userId);
         if (buyer.getBalance() < purchaseDto.getPriceForUnit() * purchaseDto.getQuantity()) {
             throw new ValidationException(String.format("User id=%s has low balance: %s, required: %s",
-                    buyer.getId(), buyer.getBalance(), purchaseDto.getPriceForUnit() * purchaseDto.getQuantity());
+                    buyer.getId(), buyer.getBalance(), purchaseDto.getPriceForUnit() * purchaseDto.getQuantity()));
         }
         Company sellCompany = checkAndGetCompany(purchaseDto.getCompany());
         User seller = checkAndGetUser(sellCompany.getOwner().getId());

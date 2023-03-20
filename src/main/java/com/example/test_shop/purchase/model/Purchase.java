@@ -8,6 +8,11 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
+/**
+ * Class of {@link Purchase} entity
+ *
+ * @author DmitrySheyko
+ */
 @Entity
 @Table(name = "purchases")
 @Getter

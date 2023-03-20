@@ -21,6 +21,11 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * Class of service for {@link Comment} entity
+ *
+ * @author DmitrySheyko
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j

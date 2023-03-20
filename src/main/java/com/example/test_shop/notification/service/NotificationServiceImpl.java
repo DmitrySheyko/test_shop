@@ -18,6 +18,11 @@ import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Class of service for {@link Notification} entity
+ *
+ * @author DmitrySheyko
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j

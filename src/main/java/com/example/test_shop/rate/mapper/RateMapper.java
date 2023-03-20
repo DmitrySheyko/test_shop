@@ -7,6 +7,11 @@ import com.example.test_shop.rate.model.Rate;
 import com.example.test_shop.user.mapper.UserMapper;
 import org.springframework.stereotype.Component;
 
+/**
+ * Class of mapper for {@link Rate}
+ *
+ * @author DmitrySheyko
+ */
 @Component
 public class RateMapper {
 

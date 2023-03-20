@@ -21,6 +21,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Class of service for {@link Company} entity
+ *
+ * @author DmitrySheyko
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j

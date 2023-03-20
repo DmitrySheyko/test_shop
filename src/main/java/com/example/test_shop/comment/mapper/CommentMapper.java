@@ -7,6 +7,11 @@ import com.example.test_shop.product.mapper.ProductMapper;
 import com.example.test_shop.user.mapper.UserMapper;
 import org.springframework.stereotype.Component;
 
+/**
+ * Class of mapper for {@link Comment} entity
+ *
+ * @author DmitrySheyko
+ */
 @Component
 public class CommentMapper {
 

@@ -3,12 +3,18 @@ package com.example.test_shop.discount.controller;
 import com.example.test_shop.discount.dto.DiscountAdminUpdateDto;
 import com.example.test_shop.discount.dto.DiscountDto;
 import com.example.test_shop.discount.dto.NewDiscountDto;
+import com.example.test_shop.discount.model.Discount;
 import com.example.test_shop.discount.service.DiscountService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Class of controller for {@link Discount} entity
+ *
+ * @author DmitrySheyko
+ */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("admin/discount")

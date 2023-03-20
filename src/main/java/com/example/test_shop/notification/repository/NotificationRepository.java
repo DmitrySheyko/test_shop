@@ -6,6 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Set;
 
+/**
+ * Interface of repository for {@link Notification} entity
+ *
+ * @author DmitrySheyko
+ */
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
     Set<Notification> findAllByUser(User user);

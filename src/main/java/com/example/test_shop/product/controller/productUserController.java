@@ -3,12 +3,18 @@ package com.example.test_shop.product.controller;
 import com.example.test_shop.product.dto.NewProductDto;
 import com.example.test_shop.product.dto.ProductDto;
 import com.example.test_shop.product.dto.ProductUpdateDto;
+import com.example.test_shop.product.model.Product;
 import com.example.test_shop.product.service.ProductService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Class of user's controller for {@link Product} entity
+ *
+ * @author DmitrySheyko
+ */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/user")

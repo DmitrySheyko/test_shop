@@ -2,6 +2,7 @@ package com.example.test_shop.company.controller;
 
 import com.example.test_shop.company.dto.CompanyAdminUpdateDto;
 import com.example.test_shop.company.dto.CompanyDto;
+import com.example.test_shop.company.model.Company;
 import com.example.test_shop.company.service.CompanyService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
@@ -10,6 +11,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
+/**
+ * Class of admin controller for {@link Company} entity
+ *
+ * @author DmitrySheyko
+ */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin/company")

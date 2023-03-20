@@ -7,6 +7,11 @@ import lombok.*;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Class o {@link User} entity
+ *
+ * @author DmitrySheyko
+ */
 @Entity
 @Table(name = "users")
 @Getter
@@ -39,5 +44,8 @@ public class User {
 
     @OneToMany(cascade = CascadeType.REMOVE)
     private Set<Notification> notificationSet = new HashSet<>();
+
+    @Column(name = "role")
+    private String role;
 
 }

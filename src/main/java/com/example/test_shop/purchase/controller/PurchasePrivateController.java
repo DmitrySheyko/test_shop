@@ -2,6 +2,7 @@ package com.example.test_shop.purchase.controller;
 
 import com.example.test_shop.purchase.dto.PurchaseBuyerDto;
 import com.example.test_shop.purchase.dto.NewPurchaseDto;
+import com.example.test_shop.purchase.model.Purchase;
 import com.example.test_shop.purchase.service.PurchaseService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
@@ -10,6 +11,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
+/**
+ * Class user's controller for {@link Purchase} entity
+ *
+ * @author DmitrySheyko
+ */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/user/{userId}/purchase")

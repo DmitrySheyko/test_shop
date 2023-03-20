@@ -9,6 +9,11 @@ import com.example.test_shop.company.model.CompanyStatus;
 import com.example.test_shop.user.mapper.UserMapper;
 import org.springframework.stereotype.Component;
 
+/**
+ * Class of mapper {@link Company} entity
+ *
+ * @author DmitrySheyko
+ */
 @Component
 public class CompanyMapper {
 

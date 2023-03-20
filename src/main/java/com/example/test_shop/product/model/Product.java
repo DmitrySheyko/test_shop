@@ -9,6 +9,11 @@ import lombok.*;
 
 import java.util.Set;
 
+/**
+ * Class of {@link Product} entity
+ *
+ * @author DmitrySheyko
+ */
 @Entity
 @Table(name = "products")
 @Getter

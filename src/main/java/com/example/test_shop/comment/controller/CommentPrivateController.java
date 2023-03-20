@@ -2,12 +2,18 @@ package com.example.test_shop.comment.controller;
 
 import com.example.test_shop.comment.dto.CommentDto;
 import com.example.test_shop.comment.dto.NewCommentDto;
+import com.example.test_shop.comment.model.Comment;
 import com.example.test_shop.comment.service.CommentService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Class of controller for {@link Comment} entity
+ *
+ * @author DmitrySheyko
+ */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/{userId}/comment")

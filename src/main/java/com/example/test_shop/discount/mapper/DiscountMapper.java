@@ -7,6 +7,11 @@ import com.example.test_shop.discount.dto.NewDiscountDto;
 import com.example.test_shop.discount.model.Discount;
 import org.springframework.stereotype.Component;
 
+/**
+ * Class of mapper for {@link Discount} entity
+ *
+ * @author DmitrySheyko
+ */
 @Component
 public class DiscountMapper {
 

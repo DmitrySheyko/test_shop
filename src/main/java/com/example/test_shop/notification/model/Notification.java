@@ -6,6 +6,11 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
+/**
+ * Class of {@link Notification} entity
+ *
+ * @author DmitrySheyko
+ */
 @Entity
 @Table(name = "notifications")
 @Getter
