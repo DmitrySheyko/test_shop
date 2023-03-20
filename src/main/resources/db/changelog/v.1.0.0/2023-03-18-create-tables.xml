@@ -146,6 +146,9 @@
             <column name="id" type="bigint">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
+            <column name="type_of_purchase" type="Varchar(50)">
+                <constraints nullable="false"/>
+            </column>
             <column name="company_id" type="bigint">
                 <constraints nullable="false" foreignKeyName="fk_purchases_company_id" references="companies(id)"/>
             </column>

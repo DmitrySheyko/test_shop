@@ -23,6 +23,10 @@ public class Purchase {
     @EqualsAndHashCode.Include
     private String id;
 
+    @Column(name = "type_of_purchase")
+    @Enumerated(EnumType.STRING)
+    private PurchaseType type;
+
     @ManyToOne
     @JoinColumn(name = "company_id",nullable = false)
     private Company company;

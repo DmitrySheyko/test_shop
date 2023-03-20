@@ -12,19 +12,28 @@ import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/user/purchase")
+@RequestMapping("/user/{userId}/purchase")
 public class PurchasePrivateController {
     private final PurchaseService service;
 
-    @PostMapping("/{id}")
+    // Создать новую поккупку (приобрести товар)
+    @PostMapping
     public PurchaseBuyerDto add(@Valid @RequestBody NewPurchaseDto purchaseDto,
-                                @Positive @PathVariable(value = "id") Long buyerId){
+                                @Positive @PathVariable(value = "userId") Long buyerId) {
         return service.add(purchaseDto, buyerId);
     }
 
-    @GetMapping("/{id}")
-    public Set<PurchaseBuyerDto> getAllOwnPurchases(@Positive @PathVariable(value = "id") Long buyerId){
+    // Получить список своих покупок
+    @GetMapping
+    public Set<PurchaseBuyerDto> getAllOwnPurchases(@Positive @PathVariable(value = "userId") Long buyerId) {
         return service.getAllOwnPurchases(buyerId);
+    }
+
+    // Отказаться от покупки в течение суток после покупки
+    @PostMapping("/{purchaseId}")
+    public PurchaseBuyerDto reject(@Positive @PathVariable(value = "userId") Long buyerId,
+                                   @Positive @PathVariable(value = "purchaseId") Long purchaseId) {
+        return service.reject(buyerId, purchaseId);
     }
 
 }

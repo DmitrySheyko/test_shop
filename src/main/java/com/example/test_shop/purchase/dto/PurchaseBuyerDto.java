@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 public class PurchaseBuyerDto {
 
     private String id;
+    private String type;
     private CompanyShortDto sellCompany;
     private UserShortDto buyer;
     private ProductShortDto product;

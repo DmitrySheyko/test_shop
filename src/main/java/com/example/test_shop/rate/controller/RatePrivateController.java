@@ -10,15 +10,23 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("user/rate")
+@RequestMapping("user/{userId}/rate")
 public class RatePrivateController {
 
     private final RateService service;
 
-    @PostMapping("/{id}")
+    //Добавление новой оценки
+    @PostMapping
     public RateDto add(@Valid @RequestBody NewRateDto rateDto,
-                       @Positive @PathVariable(value = "id") Long userId){
+                       @Positive @PathVariable(value = "userId") Long userId) {
         return service.add(rateDto, userId);
+    }
+
+    //Удаление оценки
+    @DeleteMapping("/{rateId}")
+    public String delete(@Positive @PathVariable(value = "userId") Long userId,
+                          @Positive @PathVariable(value = "rateId") Long rateId) {
+        return service.delete(userId, rateId);
     }
 
 }

@@ -39,6 +39,7 @@ public class PurchaseMapper {
         } else {
             return PurchaseBuyerDto.builder()
                     .id(purchase.getId())
+                    .type(purchase.getType().name())
                     .sellCompany(CompanyMapper.toShortDto(purchase.getCompany()))
                     .buyer(UserMapper.toUserShortDto(purchase.getBuyer()))
                     .product(ProductMapper.toShortDto(purchase.getProduct()))

@@ -4,6 +4,7 @@ import com.example.test_shop.company.mapper.CompanyMapper;
 import com.example.test_shop.discount.mapper.DiscountMapper;
 import com.example.test_shop.product.dto.ProductDto;
 import com.example.test_shop.product.dto.ProductShortDto;
+import com.example.test_shop.product.dto.ProductUpdateDto;
 import com.example.test_shop.product.model.Product;
 import com.example.test_shop.rate.model.Rate;
 import org.springframework.stereotype.Component;
@@ -32,14 +33,21 @@ public class ProductMapper {
         }
     }
 
-    private static String calculateRate(Set<Rate> ratesSet) {
-        Float sum = 0F;
-        for (Rate rate : ratesSet) {
-            sum += (float) rate.getRate();
+    public static Product toDiscount(ProductUpdateDto productDto) {
+        if (productDto == null) {
+            return null;
+        } else {
+            return Product.builder()
+                    .id(productDto.getId())
+                    .name(productDto.getName())
+                    .description(productDto.getDescription())
+                    .price(productDto.getPrice())
+                    .quantity(productDto.getQuantity())
+                    .keyWords(productDto.getKeyWords())
+                    .characteristics(productDto.getCharacteristics())
+                    .build();
         }
-        return String.format("%.1f", sum / (float) ratesSet.size());
     }
-
 
     public static ProductShortDto toShortDto(Product product) {
         if (product == null) {
@@ -50,6 +58,18 @@ public class ProductMapper {
                     .name(product.getName())
                     .build();
         }
+    }
+
+    // Метод расчитывает и возвращает среднее арифметическое оценок
+    private static String calculateRate(Set<Rate> ratesSet) {
+        if (ratesSet.isEmpty()) {
+            return null;
+        }
+        Float sum = 0F;
+        for (Rate rate : ratesSet) {
+            sum += (float) rate.getRate();
+        }
+        return String.format("%.1f", sum / (float) ratesSet.size());
     }
 
 }

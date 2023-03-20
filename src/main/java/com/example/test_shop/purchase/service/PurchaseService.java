@@ -10,4 +10,7 @@ public interface PurchaseService {
     PurchaseBuyerDto add(NewPurchaseDto purchaseDto, Long userId);
 
     Set<PurchaseBuyerDto> getAllOwnPurchases(Long buyerId);
+
+    PurchaseBuyerDto reject(Long buyerId, Long purchaseId);
+
 }

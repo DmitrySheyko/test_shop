@@ -5,4 +5,7 @@ import com.example.test_shop.comment.dto.NewCommentDto;
 
 public interface CommentService {
     CommentDto add(NewCommentDto commentDto, Long userId);
+
+    String delete(Long userId, Long commentId);
+
 }

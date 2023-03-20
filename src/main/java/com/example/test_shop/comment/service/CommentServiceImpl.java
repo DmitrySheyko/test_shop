@@ -9,12 +9,16 @@ import com.example.test_shop.exceptions.NotFoundException;
 import com.example.test_shop.exceptions.ValidationException;
 import com.example.test_shop.purchase.model.Purchase;
 import com.example.test_shop.purchase.repository.PurchaseRepository;
+import com.example.test_shop.user.model.User;
+import com.example.test_shop.user.model.UserStatus;
+import com.example.test_shop.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -25,6 +29,7 @@ public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository repository;
     private final PurchaseRepository purchaseRepository;
+    private final UserRepository userRepository;
 
     @Override
     public CommentDto add(NewCommentDto commentDto, Long userId) {
@@ -50,6 +55,30 @@ public class CommentServiceImpl implements CommentService {
         CommentDto newCommentDto = CommentMapper.toDto(newComment);
         log.info("Comment id={} successfully add", newComment.getId());
         return newCommentDto;
+    }
+
+    @Override
+    public String delete(Long userId, Long commentId) {
+        // Проверяем существует и не заблокирован ли пользователь
+        User user = checkIsUserExistAndActive(userId);
+
+        // Проверяем существует ли комментарий с требуемыми userId и commentId
+        Optional<Comment> optionalComment = repository.findByIdAndUser(commentId, user);
+        if (optionalComment.isEmpty()) {
+            throw new NotFoundException(String.format("Comment id=%s from user id=%s not found", commentId, userId));
+        }
+        repository.delete(optionalComment.get());
+        log.info("Comment id={} successfully deleted", commentId);
+        return String.format("Comment id=%s successfully deleted", commentId);
+    }
+
+    private User checkIsUserExistAndActive(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(String
+                .format("Product didn't add. User id=%s not found", userId)));
+        if (Objects.equals(user.getStatus(), UserStatus.BLOCKED)) {
+            throw new ValidationException(String.format("User id=%s is blocked", userId));
+        }
+        return user;
     }
 
 }

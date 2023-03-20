@@ -10,15 +10,23 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/user/comment")
+@RequestMapping("/{userId}/comment")
 public class CommentPrivateController {
 
     private final CommentService service;
 
-    @PostMapping("/{id}")
+    // Добавление комментария
+    @PostMapping
     public CommentDto add(@Valid @RequestBody NewCommentDto commentDto,
-                          @Positive @PathVariable(value = "id") Long userId) {
+                          @Positive @PathVariable(value = "userId") Long userId) {
         return service.add(commentDto, userId);
+    }
+
+    // Удаление комментария
+    @DeleteMapping("/{commentId}")
+    public String delete(@Positive @PathVariable(value = "userId") Long userId,
+                         @Positive @PathVariable(value = "userId") Long commentId) {
+        return service.delete(userId, commentId);
     }
 
 }

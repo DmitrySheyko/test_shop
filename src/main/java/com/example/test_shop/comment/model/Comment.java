@@ -20,7 +20,7 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
-    private String id;
+    private Long id;
 
     @Column(name = "comment_text")
     private String text;

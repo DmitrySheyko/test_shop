@@ -11,6 +11,7 @@ import com.example.test_shop.purchase.dto.PurchaseBuyerDto;
 import com.example.test_shop.purchase.dto.NewPurchaseDto;
 import com.example.test_shop.purchase.mapper.PurchaseMapper;
 import com.example.test_shop.purchase.model.Purchase;
+import com.example.test_shop.purchase.model.PurchaseType;
 import com.example.test_shop.purchase.repository.PurchaseRepository;
 import com.example.test_shop.user.model.User;
 import com.example.test_shop.user.model.UserStatus;
@@ -41,9 +42,13 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     @Override
     public PurchaseBuyerDto add(NewPurchaseDto purchaseDto, Long userId) {
-        User buyer = checkAndGetBuyer(userId, purchaseDto.getPriceForUnit(), purchaseDto.getQuantity());
+        User buyer = checkAndGetUser(userId);
+        if (buyer.getBalance() < purchaseDto.getPriceForUnit() * purchaseDto.getQuantity()) {
+            throw new ValidationException(String.format("User id=%s has low balance: %s, required: %s",
+                    buyer.getId(), buyer.getBalance(), purchaseDto.getPriceForUnit() * purchaseDto.getQuantity());
+        }
         Company sellCompany = checkAndGetCompany(purchaseDto.getCompany());
-        User seller = checkAndGetSeller(sellCompany.getOwner().getId());
+        User seller = checkAndGetUser(sellCompany.getOwner().getId());
         Product product = checkAndGetProduct(purchaseDto.getProduct(), purchaseDto.getPriceForUnit(),
                 purchaseDto.getQuantity());
 
@@ -65,6 +70,7 @@ public class PurchaseServiceImpl implements PurchaseService {
         // Сохраняем данные о покупке
         Purchase purchase = PurchaseMapper.toPurchase(purchaseDto, sellCompany, buyer, seller, product, totalSum,
                 shopCommissionSum);
+        purchase.setType(PurchaseType.PURCHASE);
         purchase.setPurchaseDateTime(LocalDateTime.now());
         purchase = repository.save(purchase);
 
@@ -86,29 +92,56 @@ public class PurchaseServiceImpl implements PurchaseService {
         return purchaseBuyerDtoSet;
     }
 
+    @Override
+    public PurchaseBuyerDto reject(Long buyerId, Long purchaseId) {
+        // Проверяем, существует и не заблокирован ли покупатель
+        User buyer = checkAndGetUser(buyerId);
 
-    private User checkAndGetBuyer(Long buyerId, Double priceForUnit, Integer quantity) {
-        User buyer = userRepository.findById(buyerId)
-                .orElseThrow(() -> new NotFoundException(String.format("User id=%s not found", buyerId)));
+        // Проверяем, существует и не заблокирован ли продавец
+        User seller = checkAndGetUser(buyerId);
+
+        // Проверяем сущесвует ли покупка
+        Purchase purchase = repository.findById(purchaseId)
+                .orElseThrow(() -> new NotFoundException(String.format("Purchase id=%s not found", purchaseId)));
+
+        // Осуществляем возврат денег покупателю
+        seller.setBalance(seller.getBalance() - purchase.getTotalSum() - purchase.getShopCommission());
+        buyer.setBalance(buyer.getBalance() + purchase.getTotalSum());
+        userRepository.save(seller);
+        userRepository.save(buyer);
+
+        // Осуществляем возврат товара компании продавци
+        Product product = purchase.getProduct();
+        product.setQuantity(purchase.getQuantity() + purchase.getQuantity());
+        productRepository.save(product);
+
+        // Создаем и сохраняем новый Purchase со статусом Reject
+        Purchase reject = Purchase.builder()
+                .type(PurchaseType.REJECT)
+                .company(product.getCompany())
+                .seller(purchase.getSeller())
+                .buyer(purchase.getBuyer())
+                .product(purchase.getProduct())
+                .priceForUnit(purchase.getPriceForUnit())
+                .totalSum(purchase.getTotalSum())
+                .shopCommission(purchase.getShopCommission())
+                .purchaseDateTime(LocalDateTime.now())
+                .build();
+
+        PurchaseBuyerDto rejectDto = PurchaseMapper.toBuyerPurchaseDto(reject);
+        log.info("Reject id={} for purchases id={} successfully created", reject.getId(), purchase.getId());
+        return rejectDto;
+    }
+
+
+    private User checkAndGetUser(Long userId) {
+        User buyer = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException(String.format("User id=%s not found", userId)));
         if (buyer.getStatus().equals(UserStatus.BLOCKED)) {
-            throw new ValidationException(String.format("User id=%s blocked", buyerId));
-        }
-        if (buyer.getBalance() < priceForUnit * quantity) {
-            throw new ValidationException(String.format("User id=%s has low balance: %s, required: %s",
-                    buyerId, buyer.getBalance(), priceForUnit * quantity));
+            throw new ValidationException(String.format("User id=%s blocked", userId));
         }
         return buyer;
     }
-
-    private User checkAndGetSeller(Long sellerId) {
-        User seller = userRepository.findById(sellerId)
-                .orElseThrow(() -> new NotFoundException(String.format("User id=%s not found", sellerId)));
-        if (seller.getStatus().equals(UserStatus.BLOCKED)) {
-            throw new ValidationException(String.format("User id=%s blocked", sellerId));
-        }
-        return seller;
-    }
-
 
     private Company checkAndGetCompany(Long companyId) {
         Company company = companyRepository.findById(companyId).

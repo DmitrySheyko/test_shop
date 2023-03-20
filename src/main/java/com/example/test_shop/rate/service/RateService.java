@@ -7,4 +7,6 @@ public interface RateService {
 
     RateDto add(NewRateDto rateDto, Long userId);
 
+    String delete(Long userId, Long rateId);
+
 }
