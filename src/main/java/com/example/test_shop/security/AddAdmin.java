@@ -10,16 +10,16 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class AddAdmin implements CommandLineRunner {
+
     private final UserService service;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     public void run(String... args) throws Exception {
 
         NewUserDto user = NewUserDto.builder()
                 .username("admin")
-                .password(bCryptPasswordEncoder.encode("admin"))
-                .role("ADMIN")
+                .password("admin")
+                .role("ROLE_ADMIN")
                 .email("admin@email.com")
                 .build();
 

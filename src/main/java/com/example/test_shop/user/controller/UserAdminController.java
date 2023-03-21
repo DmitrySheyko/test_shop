@@ -40,4 +40,9 @@ public class UserAdminController {
         return service.delete(userId);
     }
 
+    @GetMapping
+    public String get(){
+        return "Proverka dostupa";
+    }
+
 }

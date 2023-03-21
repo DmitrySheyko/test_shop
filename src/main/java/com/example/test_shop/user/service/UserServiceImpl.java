@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
         User userFoUpdate = UserMapper.toUser(userDtoForUpdate);
         userFromRepository.setUsername(Optional.ofNullable(userFoUpdate.getUsername()).orElse(userFromRepository.getUsername()));
         userFromRepository.setEmail(Optional.ofNullable(userFoUpdate.getEmail()).orElse(userFromRepository.getEmail()));
-        userFromRepository.setPassword(Optional.ofNullable(userFoUpdate.getPassword()).orElse(userFromRepository.getPassword()));
+        userFromRepository.setPassword(Optional.ofNullable(bCryptPasswordEncoder.encode(userFoUpdate.getPassword())).orElse(userFromRepository.getPassword()));
         userFromRepository.setBalance(Optional.ofNullable(userFoUpdate.getBalance()).orElse(userFromRepository.getBalance()));
         userFromRepository.setStatus(Optional.ofNullable(userFoUpdate.getStatus()).orElse(userFromRepository.getStatus()));
         userFromRepository = repository.save(userFromRepository);
