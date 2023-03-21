@@ -8,6 +8,12 @@
 - database version control: liquibase;
 - springdoc-openapi v2.0.2
 
+### Tests:
+Tests for Postman presented in folder __Postman_test__  
+Link: https://github.com/DmitrySheyko/test_shop/tree/master/postman_test  
+Tests should be imported in Postman.
+(Tests will be additionaly updated in nearest time)
+
 ### Functions:
  - creation of user accounts, companies, products, discounts, purchases, notifications, rates, comments;
  - user has function bay poduct and return product in 25 hours;
@@ -22,4 +28,6 @@ passwors: admin;
 
 OpenAPI:
 1) Launch application;
-2) Use link : http://localhost:8080/v3/api-docs
+2) Use link : http://localhost:8080/v3/api-docs  
+
+Author: Dmitry Sheyko   
