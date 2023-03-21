@@ -44,7 +44,6 @@ public class PurchaseServiceImpl implements PurchaseService {
     private final CompanyRepository companyRepository;
     private final ProductRepository productRepository;
 
-
     @Override
     public PurchaseBuyerDto add(NewPurchaseDto purchaseDto, Long userId) {
         User buyer = checkAndGetUser(userId);
@@ -87,6 +86,7 @@ public class PurchaseServiceImpl implements PurchaseService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Set<PurchaseBuyerDto> getAllOwnPurchases(Long buyerId) {
         User buyer = userRepository.findById(buyerId)
                 .orElseThrow(() -> new NotFoundException(String.format("User id=%s not found", buyerId)));
@@ -111,7 +111,7 @@ public class PurchaseServiceImpl implements PurchaseService {
                 .orElseThrow(() -> new NotFoundException(String.format("Purchase id=%s not found", purchaseId)));
 
         // Проверяемне прошли ли 24 часа с момента покупки
-        if(purchase.getPurchaseDateTime().plusDays(1).isBefore(LocalDateTime.now())){
+        if (purchase.getPurchaseDateTime().plusDays(1).isBefore(LocalDateTime.now())) {
             throw new ValidationException(String.format("Product id=%s was purchased more than 24 hour ago", purchaseId));
         }
 
@@ -143,7 +143,6 @@ public class PurchaseServiceImpl implements PurchaseService {
         log.info("Reject id={} for purchases id={} successfully created", reject.getId(), purchase.getId());
         return rejectDto;
     }
-
 
     private User checkAndGetUser(Long userId) {
         User buyer = userRepository.findById(userId)

@@ -36,7 +36,6 @@ public class RateServiceImpl implements RateService {
     private final PurchaseRepository purchaseRepository;
     private final UserRepository userRepository;
 
-
     @Override
     public RateDto add(NewRateDto rateDto, Long userId) {
         // Проверяем покупал ли пользвательданный товар

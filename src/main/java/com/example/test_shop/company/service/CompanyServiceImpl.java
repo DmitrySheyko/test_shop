@@ -15,6 +15,7 @@ import com.example.test_shop.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class CompanyServiceImpl implements CompanyService {
     private final CompanyRepository repository;
     private final UserRepository userRepository;
@@ -69,6 +71,7 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Set<CompanyDto> getAllByStatus(Set<String> statusStingSet) {
         Set<CompanyStatus> statusSet = statusStingSet.stream().map(CompanyStatus::valueOf).collect(Collectors.toSet());
         Set<Company> companySet = repository.findAllByStatusIn(statusSet);

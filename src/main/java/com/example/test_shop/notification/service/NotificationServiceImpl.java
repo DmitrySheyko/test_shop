@@ -13,6 +13,7 @@ import com.example.test_shop.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class NotificationServiceImpl implements NotificationService {
 
     private final NotificationRepository repository;
@@ -45,6 +47,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Set<NotificationDto> getAllbyUserId(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(String
                 .format("Notification didn't add. User id=%s not found", userId)));
