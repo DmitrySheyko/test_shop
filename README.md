@@ -26,8 +26,13 @@ Admin;
 username: admin;  
 passwors: admin.
 
+### Docs:
+Swagger UI:
+1) Launch application;
+2) Use link: http://localhost:8080/swagger-ui/index.html
+
 OpenAPI:
 1) Launch application;
-2) Use link : http://localhost:8080/v3/api-docs  
+2) Use link : http://localhost:8080/v3/api-docs
 
 Author: Dmitry Sheyko   
