@@ -109,6 +109,11 @@ public class PurchaseServiceImpl implements PurchaseService {
         Purchase purchase = repository.findById(purchaseId)
                 .orElseThrow(() -> new NotFoundException(String.format("Purchase id=%s not found", purchaseId)));
 
+        // Проверяемне прошли ли 24 часа с момента покупки
+        if(purchase.getPurchaseDateTime().plusDays(1).isBefore(LocalDateTime.now())){
+            throw new ValidationException(String.format("Product id=%s was purchased more than 24 hour ago", purchaseId));
+        }
+
         // Осуществляем возврат денег покупателю
         seller.setBalance(seller.getBalance() - purchase.getTotalSum() - purchase.getShopCommission());
         buyer.setBalance(buyer.getBalance() + purchase.getTotalSum());
