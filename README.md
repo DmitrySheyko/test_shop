@@ -3,7 +3,7 @@
 ### Description:
 - java version: 18 (Amazon Corretto 18.0.2);
 - Spring Boot version: 3.0.4;
-- Spring Boot security;
+- Spring Boot security (used Basic authentification);
 - database: h2;
 - database version control: liquibase;
 - springdoc-openapi v2.0.2
