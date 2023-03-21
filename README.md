@@ -23,8 +23,8 @@ From IDEA:
 1) launch class _src/main/java/com/dmitrySheyko/kameleoon_test_task/KameleoonTestTaskApplication.java_.
 
 Admin;
-username: admin;
-passwors: admin;
+username: admin;  
+passwors: admin.
 
 OpenAPI:
 1) Launch application;
