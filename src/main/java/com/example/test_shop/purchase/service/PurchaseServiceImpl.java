@@ -57,7 +57,8 @@ public class PurchaseServiceImpl implements PurchaseService {
         Product product = checkAndGetProduct(purchaseDto.getProduct(), purchaseDto.getPriceForUnit(),
                 purchaseDto.getQuantity());
 
-        Double totalSum = purchaseDto.getPriceForUnit() * purchaseDto.getQuantity();
+        // Рассчитываем сумму покупки у учетом скидки
+        Double totalSum = product.getPrice() * purchaseDto.getQuantity() * product.getDiscount().getValue();
         double shopCommissionSum = totalSum * COMMISSION_OF_SHOP;
 
         // Вычитаем купленный товар из складских запасов

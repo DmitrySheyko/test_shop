@@ -1,5 +1,8 @@
 package com.example.test_shop.product.service;
 
+import com.example.test_shop.comment.dto.CommentDto;
+import com.example.test_shop.comment.mapper.CommentMapper;
+import com.example.test_shop.comment.model.Comment;
 import com.example.test_shop.company.model.Company;
 import com.example.test_shop.company.model.CompanyStatus;
 import com.example.test_shop.company.repository.CompanyRepository;
@@ -29,6 +32,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Class of service for {@link Product} entity
@@ -116,6 +121,16 @@ public class ProductServiceImpl implements ProductService {
         List<ProductShortDto> productsList = productsPage.stream().map(ProductMapper::toShortDto).toList();
         log.info("List of products successfully received");
         return productsList;
+    }
+
+    @Override
+    public Set<CommentDto> getComments(Long userId, Long productId) {
+        checkIsUserExistAndActive(userId);
+        Product product = checkAndGetProduct(productId);
+        Set<Comment> commentSet = product.getCommentsSet();
+        Set<CommentDto> commentDtoSet = commentSet.stream().map(CommentMapper::toDto).collect(Collectors.toSet());
+        log.info("Set of comments for product id={} successfully received", productId);
+        return commentDtoSet;
     }
 
     private void checkIsUserExistAndActive(Long userId) {
