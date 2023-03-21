@@ -84,7 +84,7 @@
             <column name="description" type="varchar(1000)">
                 <constraints nullable="true"/>
             </column>
-            <column name="discount_value" type="decimal">
+            <column name="discount_value" type="double">
                 <constraints nullable="false"/>
             </column>
             <column name="start_date_time" type="timestamp">
@@ -125,7 +125,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="discount_id" type="bigint">
-                <constraints nullable="false" foreignKeyName="fk_products_discount_id" references="discounts(id)"/>
+                <constraints nullable="true" foreignKeyName="fk_products_discount_id" references="discounts(id)"/>
             </column>
             <column name="key_words" type="varchar(1000)">
                 <constraints nullable="true"/>
@@ -221,7 +221,7 @@
             <column name="id" type="bigint">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
-            <column name="text" type="varchar(1000)">
+            <column name="comment_text" type="varchar(1000)">
                 <constraints nullable="false"/>
             </column>
             <column name="user_id" type="bigint">

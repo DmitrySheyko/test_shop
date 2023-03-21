@@ -5,6 +5,7 @@ import com.example.test_shop.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -33,7 +34,7 @@ public class Company {
     @Column(name = "description")
     private String description;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 
@@ -45,6 +46,6 @@ public class Company {
     private CompanyStatus status;
 
     @OneToMany
-    private Set<Product> productsSet;
+    private Set<Product> productsSet = new HashSet<>();
 
 }

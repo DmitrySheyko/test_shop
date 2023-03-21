@@ -26,7 +26,7 @@ public class Purchase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
-    private String id;
+    private Long id;
 
     @Column(name = "type_of_purchase")
     @Enumerated(EnumType.STRING)

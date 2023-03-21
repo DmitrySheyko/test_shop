@@ -46,13 +46,18 @@ public class UserServiceImpl implements UserService {
     public UserAdminDto update(UserAdminUpdateDto userDtoForUpdate, Long userId) {
         User userFromRepository = repository.findById(userId).orElseThrow(() -> new NotFoundException(String
                 .format("User didn't update. User id=%s not found", userId)));
+
         User userFoUpdate = UserMapper.toUser(userDtoForUpdate);
         userFromRepository.setUsername(Optional.ofNullable(userFoUpdate.getUsername()).orElse(userFromRepository.getUsername()));
         userFromRepository.setEmail(Optional.ofNullable(userFoUpdate.getEmail()).orElse(userFromRepository.getEmail()));
-        userFromRepository.setPassword(Optional.ofNullable(bCryptPasswordEncoder.encode(userFoUpdate.getPassword())).orElse(userFromRepository.getPassword()));
         userFromRepository.setBalance(Optional.ofNullable(userFoUpdate.getBalance()).orElse(userFromRepository.getBalance()));
         userFromRepository.setStatus(Optional.ofNullable(userFoUpdate.getStatus()).orElse(userFromRepository.getStatus()));
+        if (userFoUpdate.getPassword() != null) {
+            userFromRepository.setPassword(bCryptPasswordEncoder.encode(userFoUpdate.getPassword()));
+        }
+
         userFromRepository = repository.save(userFromRepository);
+
         UserAdminDto updatedUserAdminDto = UserMapper.toUserDto(userFromRepository);
         log.info("User id={} successfully updated", userId);
         return updatedUserAdminDto;

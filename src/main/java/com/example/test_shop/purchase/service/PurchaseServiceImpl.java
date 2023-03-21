@@ -38,6 +38,7 @@ import java.util.stream.Collectors;
 public class PurchaseServiceImpl implements PurchaseService {
 
     private static final float COMMISSION_OF_SHOP = 0.05F;
+    private static final int DAYS_FOR_REJECT_OF_PURCHASE = 1;
 
     private final PurchaseRepository repository;
     private final UserRepository userRepository;
@@ -51,13 +52,13 @@ public class PurchaseServiceImpl implements PurchaseService {
             throw new ValidationException(String.format("User id=%s has low balance: %s, required: %s",
                     buyer.getId(), buyer.getBalance(), purchaseDto.getPriceForUnit() * purchaseDto.getQuantity()));
         }
-        Company sellCompany = checkAndGetCompany(purchaseDto.getCompany());
+        Company sellCompany = checkAndGetCompany(purchaseDto.getCompanyId());
         User seller = checkAndGetUser(sellCompany.getOwner().getId());
-        Product product = checkAndGetProduct(purchaseDto.getProduct(), purchaseDto.getPriceForUnit(),
+        Product product = checkAndGetProduct(purchaseDto.getProductId(), purchaseDto.getPriceForUnit(),
                 purchaseDto.getQuantity());
 
         // Рассчитываем сумму покупки у учетом скидки
-        Double totalSum = product.getPrice() * purchaseDto.getQuantity() * product.getDiscount().getValue();
+        Double totalSum = (product.getPrice() - product.getPrice() * product.getDiscount().getValue()) * purchaseDto.getQuantity();
         double shopCommissionSum = totalSum * COMMISSION_OF_SHOP;
 
         // Вычитаем купленный товар из складских запасов
@@ -111,7 +112,7 @@ public class PurchaseServiceImpl implements PurchaseService {
                 .orElseThrow(() -> new NotFoundException(String.format("Purchase id=%s not found", purchaseId)));
 
         // Проверяемне прошли ли 24 часа с момента покупки
-        if (purchase.getPurchaseDateTime().plusDays(1).isBefore(LocalDateTime.now())) {
+        if (purchase.getPurchaseDateTime().plusDays(DAYS_FOR_REJECT_OF_PURCHASE).isBefore(LocalDateTime.now())) {
             throw new ValidationException(String.format("Product id=%s was purchased more than 24 hour ago", purchaseId));
         }
 
@@ -134,10 +135,12 @@ public class PurchaseServiceImpl implements PurchaseService {
                 .buyer(purchase.getBuyer())
                 .product(purchase.getProduct())
                 .priceForUnit(purchase.getPriceForUnit())
+                .quantity(purchase.getQuantity())
                 .totalSum(purchase.getTotalSum())
                 .shopCommission(purchase.getShopCommission())
                 .purchaseDateTime(LocalDateTime.now())
                 .build();
+        reject=repository.save(reject);
 
         PurchaseBuyerDto rejectDto = PurchaseMapper.toBuyerPurchaseDto(reject);
         log.info("Reject id={} for purchases id={} successfully created", reject.getId(), purchase.getId());

@@ -5,8 +5,6 @@ import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 /**
  * Class of dto for creating new {@link Discount} entity
  *
@@ -19,15 +17,14 @@ public class NewDiscountDto {
     @NotBlank
     private String description;
 
-    @Positive
+    @DecimalMax("1.0")
+    @DecimalMin("0.001")
     private Double value;
 
     @NotNull
-    @FutureOrPresent
-    private LocalDateTime startDateTime;
+    private String startDateTime;
 
     @NotNull
-    @Future
-    private LocalDateTime finishDateTime;
+    private String finishDateTime;
 
 }

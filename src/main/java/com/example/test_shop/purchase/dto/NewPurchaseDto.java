@@ -17,11 +17,11 @@ public class NewPurchaseDto {
 
     @NotNull
     @Positive
-    private Long company;
+    private Long companyId;
 
     @NotNull
     @Positive
-    private Long product;
+    private Long productId;
 
     @NotNull
     @Positive

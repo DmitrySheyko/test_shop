@@ -7,6 +7,9 @@ import com.example.test_shop.discount.dto.NewDiscountDto;
 import com.example.test_shop.discount.model.Discount;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 /**
  * Class of mapper for {@link Discount} entity
  *
@@ -15,6 +18,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class DiscountMapper {
 
+    private static final DateTimeFormatter DATE_TIME_PATTERN= DateTimeFormatter.ofPattern("yyyy-dd-MM HH:mm:ss");
+
     public static Discount toDiscount(NewDiscountDto discountDto) {
         if (discountDto == null) {
             return null;
@@ -22,10 +27,14 @@ public class DiscountMapper {
             return Discount.builder()
                     .description(discountDto.getDescription())
                     .value(discountDto.getValue())
-                    .startDateTime(discountDto.getStartDateTime())
-                    .finishDateTime(discountDto.getFinishDateTime())
+                    .startDateTime(toDateTime(discountDto.getStartDateTime()))
+                    .finishDateTime(toDateTime(discountDto.getFinishDateTime()))
                     .build();
         }
+    }
+
+    private static LocalDateTime toDateTime(String dateTime) {
+        return LocalDateTime.parse(dateTime, DATE_TIME_PATTERN);
     }
 
     public static Discount toDiscount(DiscountAdminUpdateDto discountDto) {

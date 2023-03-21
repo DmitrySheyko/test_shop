@@ -31,6 +31,7 @@ public class RateMapper {
         } else {
             return RateDto.builder()
                     .id(rate.getId())
+                    .rate(rate.getRate())
                     .user(UserMapper.toUserShortDto(rate.getUser()))
                     .product(ProductMapper.toShortDto(rate.getProduct()))
                     .createdOn(rate.getCreatedOn())

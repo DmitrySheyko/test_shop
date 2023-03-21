@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @Builder
 public class PurchaseBuyerDto {
 
-    private String id;
+    private Long id;
     private String type;
     private CompanyShortDto sellCompany;
     private UserShortDto buyer;

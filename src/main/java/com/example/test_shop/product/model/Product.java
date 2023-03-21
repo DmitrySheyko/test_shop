@@ -7,6 +7,7 @@ import com.example.test_shop.rate.model.Rate;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -35,7 +36,7 @@ public class Product {
     @Column(name = "description")
     private String description;
 
-    @ManyToOne
+    @ManyToOne (cascade = CascadeType.REMOVE)
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
 
@@ -49,8 +50,8 @@ public class Product {
     @JoinColumn(name = "discount_id", nullable = false)
     private Discount discount;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private Set<Comment> commentsSet;
+    @OneToMany(mappedBy = "product")
+    private Set<Comment> commentsSet = new HashSet<>();
 
     @Column(name = "key_words")
     private String keyWords;
@@ -58,7 +59,7 @@ public class Product {
     @Column(name = "characteristics")
     private String characteristics;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private Set<Rate> ratesSet;
+    @OneToMany(mappedBy = "product")
+    private Set<Rate> ratesSet = new HashSet<>();
 
 }

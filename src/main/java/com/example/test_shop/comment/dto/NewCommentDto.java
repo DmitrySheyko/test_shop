@@ -21,10 +21,6 @@ public class NewCommentDto {
 
     @NotNull
     @Positive
-    private long userId;
-
-    @NotNull
-    @Positive
     private long productId;
 
 }
