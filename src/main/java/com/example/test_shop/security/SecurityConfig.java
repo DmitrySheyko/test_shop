@@ -1,11 +1,11 @@
 package com.example.test_shop.security;
 
-import com.example.test_shop.user.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -27,9 +27,14 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
+                .csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/user/**").hasAnyRole("ADMIN", "USER")
+                .requestMatchers("/admin/**").hasAnyRole("ADMIN")
+                .requestMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**")
+                .permitAll()
+                .anyRequest()
+                .permitAll()
                 .and()
                 .httpBasic();
 
@@ -37,8 +42,14 @@ public class SecurityConfig {
     }
 
     @Bean
-    public UserDetailsService userDetailsService(UserRepository userRepository){
-        return new ShopUserDetailService(userRepository);
+    public AuthenticationManager authenticationManager(HttpSecurity http, BCryptPasswordEncoder bCryptPasswordEncoder,
+                                                       ShopUserDetailService userDetailService)
+            throws Exception {
+        return http.getSharedObject(AuthenticationManagerBuilder.class)
+                .userDetailsService(userDetailService)
+                .passwordEncoder(bCryptPasswordEncoder)
+                .and()
+                .build();
     }
 
 }

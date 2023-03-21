@@ -16,15 +16,15 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/user")
+@RequestMapping("user/{userId}/company")
 public class CompanyUserController {
 
     private final CompanyService service;
 
-    // Подача пользователем заявки на регистрацию организации
-    @PostMapping("/{id}/company")
+    // Подача пользователем заявки на регистрацию новой организации
+    @PostMapping
     public CompanyDto add(@Valid @RequestBody NewCompanyDto companyDto,
-                          @Positive @PathVariable(value = "id") Long userId){
+                          @Positive @PathVariable(value = "userId") Long userId){
         return service.add(companyDto, userId);
     }
 

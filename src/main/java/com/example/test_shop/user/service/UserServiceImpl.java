@@ -10,7 +10,7 @@ import com.example.test_shop.user.model.UserStatus;
 import com.example.test_shop.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -26,13 +26,13 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository repository;
-    private final PasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public UserAdminDto add(NewUserDto userDto) {
         User user = UserMapper.toUser(userDto);
         user.setStatus(UserStatus.ACTIVE);
         user.setBalance(0.0);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user = repository.save(user);
         UserAdminDto createdUserAdminDto = UserMapper.toUserDto(user);
         log.info("User id={} successfully created", user.getId());

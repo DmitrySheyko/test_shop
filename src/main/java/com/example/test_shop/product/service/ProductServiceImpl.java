@@ -9,6 +9,7 @@ import com.example.test_shop.exceptions.NotFoundException;
 import com.example.test_shop.exceptions.ValidationException;
 import com.example.test_shop.product.dto.NewProductDto;
 import com.example.test_shop.product.dto.ProductDto;
+import com.example.test_shop.product.dto.ProductShortDto;
 import com.example.test_shop.product.dto.ProductUpdateDto;
 import com.example.test_shop.product.mapper.ProductMapper;
 import com.example.test_shop.product.model.Product;
@@ -18,9 +19,14 @@ import com.example.test_shop.user.model.UserStatus;
 import com.example.test_shop.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -101,6 +107,17 @@ public class ProductServiceImpl implements ProductService {
         return String.format("Product id=%s successfully deleted", productId);
     }
 
+    @Override
+    public List<ProductShortDto> getAll(Long userId, Integer from, Integer size) {
+        checkIsUserExistAndActive(userId);
+        int page = from / size;
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id"));
+        Page<Product> productsPage = repository.findAll(pageable);
+        List<ProductShortDto> productsList = productsPage.stream().map(ProductMapper::toShortDto).toList();
+        log.info("List of products successfully received");
+        return productsList;
+    }
+
     private void checkIsUserExistAndActive(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(String
                 .format("Product didn't add. User id=%s not found", userId)));
@@ -123,21 +140,18 @@ public class ProductServiceImpl implements ProductService {
         if (discountId == null) {
             return null;
         }
-        Discount discount = discountRepository.findById(discountId).orElseThrow(() -> new NotFoundException(String
+        return discountRepository.findById(discountId).orElseThrow(() -> new NotFoundException(String
                 .format("Product didn't add. Discount id=%s not found", discountId)));
-        return discount;
     }
 
     private Product checkAndGetProduct(Long productId) {
-        Product product = repository.findById(productId)
+        return repository.findById(productId)
                 .orElseThrow(() -> new NotFoundException(String.format("Product id=%s not found", productId)));
-        return product;
     }
 
     private Discount checkAndGetDiscount(Long discountId) {
-        Discount discount = discountRepository.findById(discountId)
+        return discountRepository.findById(discountId)
                 .orElseThrow(() -> new NotFoundException(String.format("Discount id=%s not found", discountId)));
-        return discount;
     }
 
 }

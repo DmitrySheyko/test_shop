@@ -8,6 +8,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 /**
  * Implementation of UserDetailsService
  *
@@ -21,8 +23,16 @@ public class ShopUserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(String.format("Username %s not found", username)));
+        System.out.println("Программа ищет:" + username);
+        User user;
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+        if (optionalUser.isEmpty()) {
+            throw new UsernameNotFoundException(String.format("Username %s not found", username));
+        } else {
+            user = optionalUser.get();
+        }
+        System.out.println("Нашла:" + user.getUsername());
+        System.out.println("Нашла:" + user.getPassword());
         return new ShopUserDetails(user);
     }
 

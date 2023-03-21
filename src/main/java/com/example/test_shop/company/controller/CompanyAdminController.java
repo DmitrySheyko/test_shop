@@ -24,15 +24,15 @@ public class CompanyAdminController {
     private final CompanyService service;
 
     // Активация администратором новой компании (можно расширить до обновления любых данных о комании)
-    @PatchMapping("/{id}")
+    @PatchMapping("/{companyId}")
     public CompanyDto update(@Valid @RequestBody CompanyAdminUpdateDto companyDto,
-                             @Positive @PathVariable(value = "id") Long companyId) {
+                             @Positive @PathVariable(value = "companyId") Long companyId) {
         return service.update(companyDto, companyId);
     }
 
     // Удаление администратором компании
-    @DeleteMapping("/{id}")
-    public String delete(@Positive @PathVariable(value = "id") Long companyId) {
+    @DeleteMapping("/{companyId}")
+    public String delete(@Positive @PathVariable(value = "companyId") Long companyId) {
         return service.delete(companyId);
     }
 

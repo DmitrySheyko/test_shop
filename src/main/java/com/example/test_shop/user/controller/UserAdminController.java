@@ -21,19 +21,22 @@ import org.springframework.web.bind.annotation.*;
 public class UserAdminController {
     private final UserServiceImpl service;
 
+    // Добавление нового пользователя
     @PostMapping
     public UserAdminDto add(@Valid @RequestBody NewUserDto userDto) {
         return service.add(userDto);
     }
 
-    @PatchMapping("/{id}")
+    // Обновление пользователя
+    @PatchMapping("/{userId}")
     public UserAdminDto update(@Valid @RequestBody UserAdminUpdateDto userDto,
-                               @Positive @PathVariable(value = "id") Long userId) {
+                               @Positive @PathVariable(value = "userId") Long userId) {
         return service.update(userDto, userId);
     }
 
-    @DeleteMapping("/{id}")
-    public String delete(@Positive @PathVariable(value = "id") Long userId) {
+    // Удаление пользователя
+    @DeleteMapping("/{userId}")
+    public String delete(@Positive @PathVariable(value = "userId") Long userId) {
         return service.delete(userId);
     }
 

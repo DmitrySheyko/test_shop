@@ -16,13 +16,15 @@ import java.util.Set;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/user/notification")
+@RequestMapping("/user/{userId}/notification")
 public class PrivateNotificationController {
 
-    private NotificationService service;
+    private final NotificationService service;
 
-    @GetMapping("/{id}")
-    public Set<NotificationDto> getAllByUserId(@Positive @PathVariable(value = "id") Long userId) {
+    // Получение уведомления для пользователя
+    @GetMapping
+    public Set<NotificationDto> getAllByUserId(@Positive @PathVariable(value = "userId") Long userId) {
         return service.getAllbyUserId(userId);
     }
+
 }

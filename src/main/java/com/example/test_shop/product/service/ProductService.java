@@ -2,8 +2,11 @@ package com.example.test_shop.product.service;
 
 import com.example.test_shop.product.dto.NewProductDto;
 import com.example.test_shop.product.dto.ProductDto;
+import com.example.test_shop.product.dto.ProductShortDto;
 import com.example.test_shop.product.dto.ProductUpdateDto;
 import com.example.test_shop.product.model.Product;
+
+import java.util.List;
 
 /**
  * Interface of service for {@link Product} entity
@@ -18,4 +21,5 @@ public interface ProductService {
 
     String delete(Long userId, Long productId);
 
+    List<ProductShortDto> getAll(Long userId, Integer from, Integer size);
 }

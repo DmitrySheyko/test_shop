@@ -21,8 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/admin/notification")
 public class NotificationAdminController {
 
-    private NotificationService service;
+    private final NotificationService service;
 
+    // Создане уведомления
     @PostMapping
     public NotificationDto add(@Valid @RequestBody NewNotificationDto notificationDto) {
         return service.add(notificationDto);

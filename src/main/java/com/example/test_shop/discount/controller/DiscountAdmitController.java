@@ -29,15 +29,15 @@ public class DiscountAdmitController {
     }
 
     // Обновить скидку
-    @PatchMapping("/{id}")
+    @PatchMapping("/{discountId}")
     public DiscountDto update(@Valid @RequestBody DiscountAdminUpdateDto discountDto,
-                              @Positive @PathVariable(value = "id") Long discountId) {
+                              @Positive @PathVariable(value = "discountId") Long discountId) {
         return service.update(discountDto, discountId);
     }
 
     // Удалить скидку из базы и из всех товаров
-    @DeleteMapping("/{id}")
-    public String delete(@Positive @PathVariable(value = "id") Long discountId) {
+    @DeleteMapping("/{discountId}")
+    public String delete(@Positive @PathVariable(value = "discountId") Long discountId) {
         return service.delete(discountId);
     }
 
