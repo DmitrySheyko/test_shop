@@ -15,11 +15,11 @@ import org.hibernate.validator.constraints.URL;
 @Builder
 public class NewCompanyDto {
 
-    @NotBlank
+    @NotBlank(message = "Name can't be blank")
     private String name;
     private String description;
 
-    @URL
+    @URL(message = "Incorrect logo URL")
     private String logoUrl;
 
 }

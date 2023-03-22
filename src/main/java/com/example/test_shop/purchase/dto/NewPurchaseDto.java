@@ -1,7 +1,6 @@
 package com.example.test_shop.purchase.dto;
 
 import com.example.test_shop.purchase.model.Purchase;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Builder;
 import lombok.Data;
@@ -15,20 +14,16 @@ import lombok.Data;
 @Builder
 public class NewPurchaseDto {
 
-    @NotNull
-    @Positive
+    @Positive(message = "CompanyId should be positive")
     private Long companyId;
 
-    @NotNull
-    @Positive
+    @Positive(message = "ProductId should be positive")
     private Long productId;
 
-    @NotNull
-    @Positive
+    @Positive(message = "Quantity should be positive")
     private Integer quantity;
 
-    @NotNull
-    @Positive
+    @Positive(message = "Price for unit should be positive")
     private Double priceForUnit;
 
 }

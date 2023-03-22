@@ -61,6 +61,66 @@
 			"response": []
 		},
 		{
+			"name": "Admin search users",
+			"protocolProfileBehavior": {
+				"tlsPreferServerCiphers": true
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic base64('admin^admin');",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/admin/user?usernames=Username_1&usersId=3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"user"
+					],
+					"query": [
+						{
+							"key": "usernames",
+							"value": "Username_1"
+						},
+						{
+							"key": "usersId",
+							"value": "3"
+						},
+						{
+							"key": "usersId",
+							"value": "2",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "User 2 get own accout",
 			"protocolProfileBehavior": {
 				"tlsPreferServerCiphers": true

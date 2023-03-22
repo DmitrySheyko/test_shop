@@ -15,10 +15,10 @@ import lombok.Data;
 @Builder
 public class NewNotificationDto {
 
-    @NotBlank
+    @NotBlank(message = "Text can't be blank")
     private String text;
 
-    @Positive
+    @Positive(message = "UserId should be positive")
     private Long userId;
 
 }

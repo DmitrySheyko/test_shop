@@ -17,23 +17,19 @@ import lombok.Data;
 @Builder
 public class NewProductDto {
 
-    @NotNull
-    @NotBlank
+    @NotBlank(message = "Name can't be blank")
     private String name;
 
-    @NotNull
-    @NotBlank
+    @NotBlank(message = "Description can't be blank")
     private String description;
 
-    @NotNull
-    @Positive
+    @Positive(message = "CompanyId should be positive")
     private Long companyId;
 
-    @NotNull
+    @NotNull(message = "Price can't be null")
     private Double price;
 
-    @NotNull
-    @PositiveOrZero
+    @PositiveOrZero(message = "Quantity can't be less than null")
     private Integer quantity;
     private Long discountId;
     private String keyWords;

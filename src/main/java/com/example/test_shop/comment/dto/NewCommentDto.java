@@ -2,7 +2,6 @@ package com.example.test_shop.comment.dto;
 
 import com.example.test_shop.comment.model.Comment;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Builder;
 import lombok.Data;
@@ -16,11 +15,10 @@ import lombok.Data;
 @Builder
 public class NewCommentDto {
 
-    @NotBlank
+    @NotBlank(message = "Text can't be blank")
     private String text;
 
-    @NotNull
-    @Positive
+    @Positive(message = "ProductId should be positive")
     private long productId;
 
 }

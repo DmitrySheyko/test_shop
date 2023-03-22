@@ -14,17 +14,17 @@ import lombok.Data;
 @Builder
 public class NewDiscountDto {
 
-    @NotBlank
+    @NotBlank(message = "Description can't be null")
     private String description;
 
-    @DecimalMax("1.0")
-    @DecimalMin("0.001")
+    @DecimalMax(value = "1.0", message = "Discount can't be more than 1")
+    @DecimalMin(value = "0.001", message = "Discount can't be less than 1" )
     private Double value;
 
-    @NotNull
+    @NotNull(message = "Start DateTime can't be null")
     private String startDateTime;
 
-    @NotNull
+    @NotNull(message = "Finish DateTime can't be null")
     private String finishDateTime;
 
 }

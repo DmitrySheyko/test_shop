@@ -15,15 +15,15 @@ import lombok.Data;
 @Builder
 public class NewUserDto {
 
-    @NotBlank
+    @NotBlank(message = "Username can't be blank")
     private String username;
 
-    @Email
+    @Email(message = "Incorrect email")
     private String email;
 
-    @NotBlank
+    @NotBlank(message = "Password can't be blank")
     private String password;
 
-    @NotBlank
+    @NotBlank(message = "Role can't be blank")
     private String role;
 }

@@ -14,7 +14,7 @@ import lombok.Data;
 @Builder
 public class UserAdminUpdateDto {
 
-    @Email
+    @Email(message = "Incorrect email")
     private String email;
     private String username;
     private String password;

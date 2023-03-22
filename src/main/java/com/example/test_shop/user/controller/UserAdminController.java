@@ -10,6 +10,9 @@ import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Set;
+
 /**
  * Class of admin controller for {@link User}
  *
@@ -38,6 +41,14 @@ public class UserAdminController {
     @DeleteMapping("/{userId}")
     public String delete(@Positive @PathVariable(value = "userId") Long userId) {
         return service.delete(userId);
+    }
+
+    // Поиск пользователей по параметрам
+    @GetMapping
+    public List<UserDto> searchUsers(@RequestParam(value = "usersId", required = false) Set<String> usersId,
+                                     @RequestParam(value = "usernames", required = false) Set<String> usernames,
+                                     @RequestParam(value = "emails", required = false) Set<String> emails) {
+        return service.searchUsers(usersId, usernames, emails);
     }
 
 }

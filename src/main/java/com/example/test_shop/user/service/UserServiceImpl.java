@@ -15,7 +15,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Class of service for {@link User} entity
@@ -93,6 +96,15 @@ public class UserServiceImpl implements UserService {
         UserDto anotherUserDto = UserMapper.toUserDto(anotherUser);
         log.info("User id={} successfully received", anotherUserId);
         return anotherUserDto;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<UserDto> searchUsers(Set<String> usersId, Set<String> usernames, Set<String> emails) {
+        List<User> usersSet = repository.searchUser(usersId, usernames, emails);
+        List<UserDto> usersDtoSet = usersSet.stream().map(UserMapper::toUserDto).collect(Collectors.toList());
+        log.info("List of users successfully received");
+        return usersDtoSet;
     }
 
     private User checkAndGetUser(Long userId) {
