@@ -1,7 +1,7 @@
 package com.example.test_shop.user.mapper;
 
 import com.example.test_shop.user.dto.NewUserDto;
-import com.example.test_shop.user.dto.UserAdminDto;
+import com.example.test_shop.user.dto.UserDto;
 import com.example.test_shop.user.dto.UserAdminUpdateDto;
 import com.example.test_shop.user.dto.UserShortDto;
 import com.example.test_shop.user.model.User;
@@ -16,11 +16,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserMapper {
 
-    public static UserAdminDto toUserDto(User user) {
+    public static UserDto toUserDto(User user) {
         if (user == null) {
             return null;
         } else {
-            return UserAdminDto.builder()
+            return UserDto.builder()
                     .id(user.getId())
                     .username(user.getUsername())
                     .email(user.getEmail())

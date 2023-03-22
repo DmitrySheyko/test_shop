@@ -4,7 +4,6 @@ import com.example.test_shop.user.dto.NewUserDto;
 import com.example.test_shop.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component

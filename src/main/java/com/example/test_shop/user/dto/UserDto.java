@@ -11,7 +11,7 @@ import lombok.Data;
  */
 @Data
 @Builder
-public class UserAdminDto {
+public class UserDto {
 
     private Long id;
     private String username;

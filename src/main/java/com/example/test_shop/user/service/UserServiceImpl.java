@@ -2,7 +2,7 @@ package com.example.test_shop.user.service;
 
 import com.example.test_shop.exceptions.NotFoundException;
 import com.example.test_shop.user.dto.NewUserDto;
-import com.example.test_shop.user.dto.UserAdminDto;
+import com.example.test_shop.user.dto.UserDto;
 import com.example.test_shop.user.dto.UserAdminUpdateDto;
 import com.example.test_shop.user.mapper.UserMapper;
 import com.example.test_shop.user.model.User;
@@ -31,19 +31,19 @@ public class UserServiceImpl implements UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
-    public UserAdminDto add(NewUserDto userDto) {
+    public UserDto add(NewUserDto userDto) {
         User user = UserMapper.toUser(userDto);
         user.setStatus(UserStatus.ACTIVE);
         user.setBalance(0.0);
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user = repository.save(user);
-        UserAdminDto createdUserAdminDto = UserMapper.toUserDto(user);
+        UserDto createdUserDto = UserMapper.toUserDto(user);
         log.info("User id={} successfully created", user.getId());
-        return createdUserAdminDto;
+        return createdUserDto;
     }
 
     @Override
-    public UserAdminDto update(UserAdminUpdateDto userDtoForUpdate, Long userId) {
+    public UserDto update(UserAdminUpdateDto userDtoForUpdate, Long userId) {
         User userFromRepository = repository.findById(userId).orElseThrow(() -> new NotFoundException(String
                 .format("User didn't update. User id=%s not found", userId)));
 
@@ -58,9 +58,9 @@ public class UserServiceImpl implements UserService {
 
         userFromRepository = repository.save(userFromRepository);
 
-        UserAdminDto updatedUserAdminDto = UserMapper.toUserDto(userFromRepository);
+        UserDto updatedUserDto = UserMapper.toUserDto(userFromRepository);
         log.info("User id={} successfully updated", userId);
-        return updatedUserAdminDto;
+        return updatedUserDto;
     }
 
     @Override
@@ -70,6 +70,15 @@ public class UserServiceImpl implements UserService {
         repository.delete(userForDelete);
         log.info("User id={} successfully deleted", userId);
         return String.format("User id=%s successfully deleted", userId);
+    }
+
+    @Override
+    public UserDto getOwnAccount(Long userId) {
+        User user = repository.findById(userId).orElseThrow(() -> new NotFoundException(String
+                .format("User id=%s not found", userId)));
+        UserDto userDto = UserMapper.toUserDto(user);
+        log.info("User id={} successfully received", userId);
+        return userDto;
     }
 
 }
