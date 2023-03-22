@@ -20,4 +20,6 @@ public interface UserService {
 
     UserDto getOwnAccount(Long userId);
 
+    UserDto getAnotherUser(Long userId, Long anotherUserId);
+
 }

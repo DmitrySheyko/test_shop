@@ -22,4 +22,15 @@ spring:
     driver-class-name: org.h2.Driver
     url: jdbc:h2:mem:testdb
     password: test
-    username: test
+    username: test\
+
+logging:
+  level:
+    root: info
+    org:
+      springframework: warn
+      hibernate: warn
+    liquibase: warn
+
+  file:
+    path: ./logs/

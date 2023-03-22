@@ -148,12 +148,12 @@ public class PurchaseServiceImpl implements PurchaseService {
     }
 
     private User checkAndGetUser(Long userId) {
-        User buyer = userRepository.findById(userId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(String.format("User id=%s not found", userId)));
-        if (buyer.getStatus().equals(UserStatus.BLOCKED)) {
+        if (user.getStatus().equals(UserStatus.BLOCKED)) {
             throw new ValidationException(String.format("User id=%s blocked", userId));
         }
-        return buyer;
+        return user;
     }
 
     private Company checkAndGetCompany(Long companyId) {

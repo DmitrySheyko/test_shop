@@ -1,6 +1,7 @@
 package com.example.test_shop.user.service;
 
 import com.example.test_shop.exceptions.NotFoundException;
+import com.example.test_shop.exceptions.ValidationException;
 import com.example.test_shop.user.dto.NewUserDto;
 import com.example.test_shop.user.dto.UserDto;
 import com.example.test_shop.user.dto.UserAdminUpdateDto;
@@ -44,6 +45,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto update(UserAdminUpdateDto userDtoForUpdate, Long userId) {
+
+        /* не используем метод checkAndGetUser т.е. он отсекает заблокированных  пользователей,
+        а update используется в том числе для разблокировки
+         */
         User userFromRepository = repository.findById(userId).orElseThrow(() -> new NotFoundException(String
                 .format("User didn't update. User id=%s not found", userId)));
 
@@ -65,20 +70,38 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String delete(Long userId) {
-        User userForDelete = repository.findById(userId).orElseThrow(() -> new NotFoundException(String
-                .format("User didn't delete. User id=%s not found", userId)));
+        User userForDelete = checkAndGetUser(userId);
         repository.delete(userForDelete);
         log.info("User id={} successfully deleted", userId);
         return String.format("User id=%s successfully deleted", userId);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDto getOwnAccount(Long userId) {
-        User user = repository.findById(userId).orElseThrow(() -> new NotFoundException(String
-                .format("User id=%s not found", userId)));
+        User user = checkAndGetUser(userId);
         UserDto userDto = UserMapper.toUserDto(user);
         log.info("User id={} successfully received", userId);
         return userDto;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UserDto getAnotherUser(Long userId, Long anotherUserId) {
+        checkAndGetUser(userId);
+        User anotherUser = checkAndGetUser(anotherUserId);
+        UserDto anotherUserDto = UserMapper.toUserDto(anotherUser);
+        log.info("User id={} successfully received", anotherUserId);
+        return anotherUserDto;
+    }
+
+    private User checkAndGetUser(Long userId) {
+        User user = repository.findById(userId)
+                .orElseThrow(() -> new NotFoundException(String.format("User id=%s not found", userId)));
+        if (user.getStatus().equals(UserStatus.BLOCKED)) {
+            throw new ValidationException(String.format("User id=%s blocked", userId));
+        }
+        return user;
     }
 
 }
