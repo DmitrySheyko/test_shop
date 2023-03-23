@@ -17,7 +17,7 @@ Tests should be imported in Postman.
 
 ### Functions:
  - creation of user accounts, companies, products, discounts, purchases, notifications, rates, comments;
- - user has function bay poduct and return product in 25 hours;
+ - user has function buy poduct and return it in 24 hours;
 
 ### Launching:
 From IDEA: 
