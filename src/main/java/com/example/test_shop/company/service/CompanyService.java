@@ -5,6 +5,7 @@ import com.example.test_shop.company.dto.CompanyDto;
 import com.example.test_shop.company.dto.NewCompanyDto;
 import com.example.test_shop.company.model.Company;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -20,5 +21,7 @@ public interface CompanyService {
 
     CompanyDto update(CompanyAdminUpdateDto companyDto, Long companyId);
 
-    Set<CompanyDto> getAllByStatus(Set<String> statusesSet);
+    List<CompanyDto> searchCompany(Set<Integer> companiesId, Set<String> names, Set<String> statusesString,
+                                   Set<String> ownersId, Set<String> description);
+
 }

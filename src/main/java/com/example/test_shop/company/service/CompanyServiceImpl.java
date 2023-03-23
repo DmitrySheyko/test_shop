@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -72,12 +73,18 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     @Transactional(readOnly = true)
-    public Set<CompanyDto> getAllByStatus(Set<String> statusStingSet) {
-        Set<CompanyStatus> statusSet = statusStingSet.stream().map(CompanyStatus::valueOf).collect(Collectors.toSet());
-        Set<Company> companySet = repository.findAllByStatusIn(statusSet);
-        Set<CompanyDto> companyDtoSet = companySet.stream().map(CompanyMapper::toDto).collect(Collectors.toSet());
+    public List<CompanyDto> searchCompany(Set<Integer> companiesId, Set<String> names, Set<String> statusesString,
+                                          Set<String> ownersId, Set<String> description) {
+        Set<CompanyStatus> statusesEnum;
+        if (statusesString != null && !statusesString.isEmpty()) {
+            statusesEnum = statusesString.stream().map(CompanyStatus::valueOf).collect(Collectors.toSet());
+        } else {
+            statusesEnum = null;
+        }
+        List<Company> companiesList = repository.searchCompany(companiesId, names, statusesEnum, ownersId, description);
+        List<CompanyDto> companiesDtoList = companiesList.stream().map(CompanyMapper::toDto).toList();
         log.info("Set of companies successfully received");
-        return companyDtoSet;
+        return companiesDtoList;
     }
 
     private User checkIsUserExistAndActive(Long userId) {

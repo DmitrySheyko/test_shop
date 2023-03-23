@@ -9,6 +9,7 @@ import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -38,8 +39,13 @@ public class CompanyAdminController {
 
     // Получение администратором списка компаний по их статусу, например компаний ожидающих активации
     @GetMapping
-    public Set<CompanyDto> getAllByStatus(@RequestParam (value = "status") Set<String> statusStingSet){
-        return service.getAllByStatus(statusStingSet);
+    public List<CompanyDto> searchCompany(@RequestParam(value = "companiesId", required = false) Set<Integer> companiesId,
+                                          @RequestParam(value = "name", required = false) Set<String> names,
+                                          @RequestParam(value = "statuses", required = false) Set<String> statuses,
+                                          @RequestParam(value = "ownerId", required = false) Set<String> ownersId,
+                                          @RequestParam(value = "description", required = false) Set<String> description) {
+        return service.searchCompany(companiesId, names, statuses, ownersId, description);
     }
+
 
 }
