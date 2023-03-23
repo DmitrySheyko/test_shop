@@ -5,7 +5,7 @@ spring:
   jpa:
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.H2Dialect
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
     hibernate:
       ddl-auto: update
@@ -19,10 +19,10 @@ spring:
     change-log: db/changelog/db.changelog-master.xml
 
   datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:testdb
-    password: test
-    username: test
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/postgresDb
+    password: postgres
+    username: postgres
 
 logging:
   level:
