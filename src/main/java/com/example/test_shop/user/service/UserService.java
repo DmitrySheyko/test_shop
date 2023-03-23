@@ -25,6 +25,7 @@ public interface UserService {
 
     UserDto getAnotherUser(Long userId, Long anotherUserId);
 
-    List<UserDto> searchUsers(Set<String> usersId, Set<String> usernames, Set<String> emails);
+    List<UserDto> searchUsers(Set<String> usersId, Set<String> usernames, Set<String> emails, Set<String> roles,
+                              Double balanceEqual, Double balanceMoreOrEqual, Double balanceLessOrEqual);
 
 }

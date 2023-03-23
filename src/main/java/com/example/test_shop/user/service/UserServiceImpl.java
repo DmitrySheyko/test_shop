@@ -100,8 +100,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<UserDto> searchUsers(Set<String> usersId, Set<String> usernames, Set<String> emails) {
-        List<User> usersSet = repository.searchUser(usersId, usernames, emails);
+    public List<UserDto> searchUsers(Set<String> usersId, Set<String> usernames, Set<String> emails, Set<String> roles,
+                                     Double balanceEqual, Double balanceMoreOrEqual, Double balanceLessOrEqual) {
+        List<User> usersSet = repository.searchUser(usersId, usernames, emails, roles, balanceEqual,
+                balanceMoreOrEqual, balanceLessOrEqual);
         List<UserDto> usersDtoSet = usersSet.stream().map(UserMapper::toUserDto).collect(Collectors.toList());
         log.info("List of users successfully received");
         return usersDtoSet;

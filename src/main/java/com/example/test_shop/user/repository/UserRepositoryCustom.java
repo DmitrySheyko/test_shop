@@ -12,6 +12,7 @@ import java.util.Set;
  */
 public interface UserRepositoryCustom {
 
-    List<User> searchUser(Set<String> usersId, Set<String> usernames, Set<String> emails);
+    List<User> searchUser(Set<String> usersId, Set<String> usernames, Set<String> emails, Set<String> roles,
+                          Double balanceEqual, Double balanceMoreOrEqual, Double balanceLessOrEqual);
 
 }

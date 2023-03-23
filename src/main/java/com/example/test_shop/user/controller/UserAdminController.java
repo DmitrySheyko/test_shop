@@ -47,8 +47,12 @@ public class UserAdminController {
     @GetMapping
     public List<UserDto> searchUsers(@RequestParam(value = "usersId", required = false) Set<String> usersId,
                                      @RequestParam(value = "usernames", required = false) Set<String> usernames,
-                                     @RequestParam(value = "emails", required = false) Set<String> emails) {
-        return service.searchUsers(usersId, usernames, emails);
+                                     @RequestParam(value = "emails", required = false) Set<String> emails,
+                                     @RequestParam(value = "roles", required = false) Set<String> roles,
+                                     @RequestParam(value = "balanceEqual", required = false) Double balanceEqual,
+                                     @RequestParam(value = "balanceMoreOrEqual", required = false) Double balanceMoreOrEqual,
+                                     @RequestParam(value = "balanceLessOrEqual", required = false) Double balanceLessOrEqual) {
+        return service.searchUsers(usersId, usernames, emails, roles, balanceEqual, balanceMoreOrEqual, balanceLessOrEqual);
     }
 
 }
