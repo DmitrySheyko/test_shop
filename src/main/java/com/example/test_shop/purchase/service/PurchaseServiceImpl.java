@@ -7,6 +7,7 @@ import com.example.test_shop.exceptions.NotFoundException;
 import com.example.test_shop.exceptions.ValidationException;
 import com.example.test_shop.product.repository.ProductRepository;
 import com.example.test_shop.product.model.Product;
+import com.example.test_shop.properties.AppProperties;
 import com.example.test_shop.purchase.dto.PurchaseBuyerDto;
 import com.example.test_shop.purchase.dto.NewPurchaseDto;
 import com.example.test_shop.purchase.mapper.PurchaseMapper;
@@ -37,8 +38,7 @@ import java.util.stream.Collectors;
 @Transactional
 public class PurchaseServiceImpl implements PurchaseService {
 
-    private static final float COMMISSION_OF_SHOP = 0.05F;
-    private static final int DAYS_FOR_REJECT_OF_PURCHASE = 1;
+    private final AppProperties properties;
 
     private final PurchaseRepository repository;
     private final UserRepository userRepository;
@@ -59,7 +59,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 
         // Рассчитываем сумму покупки у учетом скидки
         Double totalSum = (product.getPrice() - product.getPrice() * product.getDiscount().getValue()) * purchaseDto.getQuantity();
-        double shopCommissionSum = totalSum * COMMISSION_OF_SHOP;
+        double shopCommissionSum = totalSum * properties.getCommissionOfShop();
 
         // Вычитаем купленный товар из складских запасов
         product.setQuantity(product.getQuantity() - purchaseDto.getQuantity());
@@ -77,7 +77,6 @@ public class PurchaseServiceImpl implements PurchaseService {
         Purchase purchase = PurchaseMapper.toPurchase(purchaseDto, sellCompany, buyer, seller, product, totalSum,
                 shopCommissionSum);
         purchase.setType(PurchaseType.PURCHASE);
-        purchase.setPurchaseDateTime(LocalDateTime.now());
         purchase = repository.save(purchase);
 
         // Возвращаем BuyerPurchaseDto
@@ -112,7 +111,7 @@ public class PurchaseServiceImpl implements PurchaseService {
                 .orElseThrow(() -> new NotFoundException(String.format("Purchase id=%s not found", purchaseId)));
 
         // Проверяемне прошли ли 24 часа с момента покупки
-        if (purchase.getPurchaseDateTime().plusDays(DAYS_FOR_REJECT_OF_PURCHASE).isBefore(LocalDateTime.now())) {
+        if (purchase.getPurchaseDateTime().plusDays(properties.getDaysForReturnProducts()).isBefore(LocalDateTime.now())) {
             throw new ValidationException(String.format("Product id=%s was purchased more than 24 hour ago", purchaseId));
         }
 

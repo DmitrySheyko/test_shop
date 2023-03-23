@@ -5,6 +5,7 @@ import com.example.test_shop.product.model.Product;
 import com.example.test_shop.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -61,6 +62,7 @@ public class Purchase {
     private Double shopCommission;
 
     @Column(name = "purchase_date_time")
+    @CreationTimestamp
     private LocalDateTime purchaseDateTime;
 
 }

@@ -47,5 +47,4 @@ public class CompanyAdminController {
         return service.searchCompany(companiesId, names, statuses, ownersId, description);
     }
 
-
 }

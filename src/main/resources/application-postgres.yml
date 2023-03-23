@@ -24,6 +24,7 @@ spring:
     password: postgres
     username: postgres
 
+# Logging
 logging:
   level:
     root: info
@@ -34,3 +35,9 @@ logging:
 
   file:
     path: ./logs/
+
+# External application properties
+application:
+  data:
+    days-for-return-products: 1
+    commission-of-shop: 0.05
