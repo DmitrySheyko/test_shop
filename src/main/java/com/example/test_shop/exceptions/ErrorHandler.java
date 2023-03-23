@@ -4,9 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.time.LocalDateTime;
 
 /**
  * Class with set of exception handlers
@@ -24,6 +27,7 @@ public class ErrorHandler {
         return ErrorResponse.builder()
                 .message(e.getMessage())
                 .reason(HttpStatus.NOT_FOUND.getReasonPhrase())
+                .dateTime(LocalDateTime.now())
                 .build();
     }
 
@@ -34,6 +38,7 @@ public class ErrorHandler {
         return ErrorResponse.builder()
                 .message(e.getMessage())
                 .reason(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                .dateTime(LocalDateTime.now())
                 .build();
     }
 
@@ -44,6 +49,7 @@ public class ErrorHandler {
         return ErrorResponse.builder()
                 .message(e.getMessage())
                 .reason(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                .dateTime(LocalDateTime.now())
                 .build();
     }
 
@@ -54,6 +60,7 @@ public class ErrorHandler {
         return ErrorResponse.builder()
                 .message(e.getMessage())
                 .reason(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                .dateTime(LocalDateTime.now())
                 .build();
     }
 
@@ -64,7 +71,18 @@ public class ErrorHandler {
         return ErrorResponse.builder()
                 .message(e.getMessage())
                 .reason(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                .dateTime(LocalDateTime.now())
                 .build();
     }
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
+        log.warn(e.getMessage());
+        return ErrorResponse.builder()
+                .message(e.getMessage())
+                .reason(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                .dateTime(LocalDateTime.now())
+                .build();
+    }
 }

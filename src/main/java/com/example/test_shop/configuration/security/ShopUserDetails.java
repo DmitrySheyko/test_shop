@@ -1,4 +1,4 @@
-package com.example.test_shop.security;
+package com.example.test_shop.configuration.security;
 
 import com.example.test_shop.user.model.User;
 import org.springframework.security.core.GrantedAuthority;

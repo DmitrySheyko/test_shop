@@ -23,7 +23,7 @@ public class NotificationAdminController {
 
     private final NotificationService service;
 
-    // Создане уведомления
+    // Создание уведомления
     @PostMapping
     public NotificationDto add(@Valid @RequestBody NewNotificationDto notificationDto) {
         return service.add(notificationDto);

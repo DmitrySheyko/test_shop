@@ -385,6 +385,106 @@
 			"response": []
 		},
 		{
+			"name": "Admin add notification to user 2",
+			"protocolProfileBehavior": {
+				"tlsPreferServerCiphers": true
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic base64('admin^admin');",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"userId\": 2,\n  \"text\": \"Notification from admin\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/admin/notification",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"notification"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User 2 get own notifications",
+			"protocolProfileBehavior": {
+				"tlsPreferServerCiphers": true
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "Password_1",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "Username_1",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic base64('admin^admin');",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/user/2/notification",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"2",
+						"notification"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Admin search users",
 			"protocolProfileBehavior": {
 				"tlsPreferServerCiphers": true
@@ -749,6 +849,66 @@
 						"user",
 						"3",
 						"purchase"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin search users",
+			"protocolProfileBehavior": {
+				"tlsPreferServerCiphers": true
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic base64('admin^admin');",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/admin/user?usernames=Username_1&usersId=3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"user"
+					],
+					"query": [
+						{
+							"key": "usernames",
+							"value": "Username_1"
+						},
+						{
+							"key": "usersId",
+							"value": "3"
+						},
+						{
+							"key": "usersId",
+							"value": "2",
+							"disabled": true
+						}
 					]
 				}
 			},

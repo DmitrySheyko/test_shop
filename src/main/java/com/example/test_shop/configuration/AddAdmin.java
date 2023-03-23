@@ -1,4 +1,4 @@
-package com.example.test_shop.security;
+package com.example.test_shop.configuration;
 
 import com.example.test_shop.user.dto.NewUserDto;
 import com.example.test_shop.user.repository.UserRepository;
@@ -13,19 +13,22 @@ public class AddAdmin implements CommandLineRunner {
 
     private final UserService service;
     private final UserRepository repository;
+    private final AppProperties properties;
 
     @Override
     public void run(String... args) throws Exception {
-        if (!repository.existsByUsername("admin")) {
+        if (!repository.existsByUsernameAndRole("admin", "ROLE_ADMIN")) {
             NewUserDto admin = NewUserDto.builder()
-                    .username("admin")
-                    .password("admin")
-                    .email("admin@email.ru")
+                    .username(properties.getAdminUsername())
+                    .password(properties.getAdminPassword())
+                    .email(properties.getAdminEmail())
                     .role("ROLE_ADMIN")
                     .build();
             service.add(admin);
         }
-        System.out.println("Admin username: admin \nAdmin password: admin");
+        // Вывод данных администратора на экран добавлен для удобства проверяющего
+        System.out.printf("Admin username: %s \nAdmin password: %s%n", properties.getAdminUsername(),
+                properties.getAdminPassword());
     }
 
 }

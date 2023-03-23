@@ -2,6 +2,7 @@ package com.example.test_shop.purchase.service;
 
 import com.example.test_shop.purchase.dto.PurchaseBuyerDto;
 import com.example.test_shop.purchase.dto.NewPurchaseDto;
+import com.example.test_shop.purchase.dto.PurchaseDto;
 import com.example.test_shop.purchase.model.Purchase;
 
 import java.util.Set;
@@ -19,4 +20,5 @@ public interface PurchaseService {
 
     PurchaseBuyerDto reject(Long buyerId, Long purchaseId);
 
+    Set<PurchaseDto> getAllOwnSales(Long buyerId);
 }

@@ -2,6 +2,7 @@ package com.example.test_shop.purchase.controller;
 
 import com.example.test_shop.purchase.dto.PurchaseBuyerDto;
 import com.example.test_shop.purchase.dto.NewPurchaseDto;
+import com.example.test_shop.purchase.dto.PurchaseDto;
 import com.example.test_shop.purchase.model.Purchase;
 import com.example.test_shop.purchase.service.PurchaseService;
 import jakarta.validation.Valid;
@@ -30,9 +31,15 @@ public class PurchasePrivateController {
     }
 
     // Получить список своих покупок
-    @GetMapping
+    @GetMapping("/purchases")
     public Set<PurchaseBuyerDto> getAllOwnPurchases(@Positive @PathVariable(value = "userId") Long buyerId) {
         return service.getAllOwnPurchases(buyerId);
+    }
+
+    // Получить список своих продаж
+    @GetMapping("/sales")
+    public Set<PurchaseDto> getAllOwnSales(@Positive @PathVariable(value = "userId") Long buyerId) {
+        return service.getAllOwnSales(buyerId);
     }
 
     // Отказаться от покупки в течение суток после покупки

@@ -1,6 +1,7 @@
 package com.example.test_shop.user.dto;
 
 import com.example.test_shop.user.model.User;
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Email;
 import lombok.Builder;
 import lombok.Data;
@@ -18,6 +19,8 @@ public class UserAdminUpdateDto {
     private String email;
     private String username;
     private String password;
+
+    @Digits(integer = 10, fraction = 2)
     private Double balance;
     private String status;
 

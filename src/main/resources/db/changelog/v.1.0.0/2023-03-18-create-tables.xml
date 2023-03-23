@@ -177,10 +177,19 @@
             <column name="price_for_unit" type="money">
                 <constraints nullable="false"/>
             </column>
-            <column name="total_sum" type="money">
+            <column name="total_sum_without_discount" type="money">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_sum_with_discount" type="money">
                 <constraints nullable="false"/>
             </column>
             <column name="shop_commission_sum" type="money">
+                <constraints nullable="false"/>
+            </column>
+            <column name="discount_sum" type="money">
+                <constraints nullable="false"/>
+            </column>
+            <column name="seller_income_sum" type="money">
                 <constraints nullable="false"/>
             </column>
             <column name="purchase_date_time" type="timestamp">

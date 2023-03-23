@@ -7,9 +7,10 @@ import com.example.test_shop.exceptions.NotFoundException;
 import com.example.test_shop.exceptions.ValidationException;
 import com.example.test_shop.product.repository.ProductRepository;
 import com.example.test_shop.product.model.Product;
-import com.example.test_shop.properties.AppProperties;
+import com.example.test_shop.configuration.AppProperties;
 import com.example.test_shop.purchase.dto.PurchaseBuyerDto;
 import com.example.test_shop.purchase.dto.NewPurchaseDto;
+import com.example.test_shop.purchase.dto.PurchaseDto;
 import com.example.test_shop.purchase.mapper.PurchaseMapper;
 import com.example.test_shop.purchase.model.Purchase;
 import com.example.test_shop.purchase.model.PurchaseType;
@@ -39,7 +40,6 @@ import java.util.stream.Collectors;
 public class PurchaseServiceImpl implements PurchaseService {
 
     private final AppProperties properties;
-
     private final PurchaseRepository repository;
     private final UserRepository userRepository;
     private final CompanyRepository companyRepository;
@@ -57,30 +57,52 @@ public class PurchaseServiceImpl implements PurchaseService {
         Product product = checkAndGetProduct(purchaseDto.getProductId(), purchaseDto.getPriceForUnit(),
                 purchaseDto.getQuantity());
 
-        // Рассчитываем сумму покупки у учетом скидки
-        Double totalSum = (product.getPrice() - product.getPrice() * product.getDiscount().getValue()) * purchaseDto.getQuantity();
-        double shopCommissionSum = totalSum * properties.getCommissionOfShop();
+        // Рассчитываем сумму покупки без учета скидки
+        Double totalSumWithoutDiscount = product.getPrice() * purchaseDto.getQuantity();
+
+        // Расчитываем сумму скидки
+        Double discountSum = totalSumWithoutDiscount * product.getDiscount().getValue();
+
+        // Рассчитываем сумму покупки с учетщм скидки
+        Double totalSumWithDiscount = totalSumWithoutDiscount - discountSum;
+
+        // Рассчитываем сумму комиссии магазина
+        Double shopCommissionSum = totalSumWithDiscount * properties.getCommissionOfShop();
+
+        // Рассчитываем сумму выручки продавца
+        Double sellerIncomeSum = totalSumWithDiscount - shopCommissionSum;
 
         // Вычитаем купленный товар из складских запасов
         product.setQuantity(product.getQuantity() - purchaseDto.getQuantity());
         productRepository.save(product);
 
         // Вычитаем стоимость покупки из баланса покупателя
-        buyer.setBalance(buyer.getBalance() - totalSum);
+        buyer.setBalance(buyer.getBalance() - totalSumWithDiscount);
         userRepository.save(buyer);
 
-        // Зачисляем на счет продавца стоимость покупки за вычетом комиссии 5%
-        seller.setBalance(seller.getBalance() + totalSum - shopCommissionSum);
+        // Зачисляем на счет продавца стоимость покупки за вычетом комиссии
+        seller.setBalance(seller.getBalance() + sellerIncomeSum);
         userRepository.save(seller);
 
         // Сохраняем данные о покупке
-        Purchase purchase = PurchaseMapper.toPurchase(purchaseDto, sellCompany, buyer, seller, product, totalSum,
-                shopCommissionSum);
-        purchase.setType(PurchaseType.PURCHASE);
+        Purchase purchase = Purchase.builder()
+                .type(PurchaseType.PURCHASE)
+                .company(sellCompany)
+                .seller(seller)
+                .buyer(buyer)
+                .product(product)
+                .quantity(purchaseDto.getQuantity())
+                .priceForUnit(purchaseDto.getPriceForUnit())
+                .totalSumWithoutDiscount(totalSumWithoutDiscount)
+                .totalSumWithDiscount(totalSumWithDiscount)
+                .shopCommissionSum(shopCommissionSum)
+                .discountSum(discountSum)
+                .sellerIncomeSum(sellerIncomeSum)
+                .build();
         purchase = repository.save(purchase);
 
         // Возвращаем BuyerPurchaseDto
-        PurchaseBuyerDto purchaseBuyerDto = PurchaseMapper.toBuyerPurchaseDto(purchase);
+        PurchaseBuyerDto purchaseBuyerDto = PurchaseMapper.toPurchaseBuyerDto(purchase);
         log.info("Purchase id={} successfully saved", purchase.getId());
         return purchaseBuyerDto;
     }
@@ -88,11 +110,10 @@ public class PurchaseServiceImpl implements PurchaseService {
     @Override
     @Transactional(readOnly = true)
     public Set<PurchaseBuyerDto> getAllOwnPurchases(Long buyerId) {
-        User buyer = userRepository.findById(buyerId)
-                .orElseThrow(() -> new NotFoundException(String.format("User id=%s not found", buyerId)));
+        User buyer = checkAndGetUser(buyerId);
         Set<Purchase> purchasesSet = repository.findAllByBuyer(buyer);
         Set<PurchaseBuyerDto> purchaseBuyerDtoSet = purchasesSet.stream()
-                .map(PurchaseMapper::toBuyerPurchaseDto)
+                .map(PurchaseMapper::toPurchaseBuyerDto)
                 .collect(Collectors.toSet());
         log.info("Set of purchases of user id={} successfully saved", buyerId);
         return purchaseBuyerDtoSet;
@@ -110,40 +131,54 @@ public class PurchaseServiceImpl implements PurchaseService {
         Purchase purchase = repository.findById(purchaseId)
                 .orElseThrow(() -> new NotFoundException(String.format("Purchase id=%s not found", purchaseId)));
 
-        // Проверяемне прошли ли 24 часа с момента покупки
+        // Проверяемне прошел ли 1 день с момента покупки
         if (purchase.getPurchaseDateTime().plusDays(properties.getDaysForReturnProducts()).isBefore(LocalDateTime.now())) {
-            throw new ValidationException(String.format("Product id=%s was purchased more than 24 hour ago", purchaseId));
+            throw new ValidationException(String.format("Product id=%s was purchased more than %s day ago", purchaseId,
+                    properties.getDaysForReturnProducts()));
         }
 
-        // Осуществляем возврат денег покупателю
-        seller.setBalance(seller.getBalance() - purchase.getTotalSum() - purchase.getShopCommission());
-        buyer.setBalance(buyer.getBalance() + purchase.getTotalSum());
+        // Мписываем сумму с продавца и осуществляем возврат денег покупателю
+        seller.setBalance(seller.getBalance() - purchase.getSellerIncomeSum());
+        buyer.setBalance(buyer.getBalance() + purchase.getTotalSumWithDiscount());
         userRepository.save(seller);
         userRepository.save(buyer);
 
-        // Осуществляем возврат товара компании продавци
+        // Осуществляем возврат товара компании продавца
         Product product = purchase.getProduct();
-        product.setQuantity(purchase.getQuantity() + purchase.getQuantity());
+        product.setQuantity(product.getQuantity() + purchase.getQuantity());
         productRepository.save(product);
 
         // Создаем и сохраняем новый Purchase со статусом Reject
         Purchase reject = Purchase.builder()
                 .type(PurchaseType.REJECT)
-                .company(product.getCompany())
+                .company(purchase.getCompany())
                 .seller(purchase.getSeller())
                 .buyer(purchase.getBuyer())
                 .product(purchase.getProduct())
-                .priceForUnit(purchase.getPriceForUnit())
                 .quantity(purchase.getQuantity())
-                .totalSum(purchase.getTotalSum())
-                .shopCommission(purchase.getShopCommission())
-                .purchaseDateTime(LocalDateTime.now())
+                .priceForUnit(purchase.getPriceForUnit())
+                .totalSumWithoutDiscount(purchase.getTotalSumWithoutDiscount())
+                .totalSumWithDiscount(purchase.getTotalSumWithDiscount())
+                .shopCommissionSum(purchase.getShopCommissionSum())
+                .discountSum(purchase.getDiscountSum())
+                .sellerIncomeSum(purchase.getSellerIncomeSum())
                 .build();
-        reject=repository.save(reject);
+        reject = repository.save(reject);
 
-        PurchaseBuyerDto rejectDto = PurchaseMapper.toBuyerPurchaseDto(reject);
+        PurchaseBuyerDto rejectDto = PurchaseMapper.toPurchaseBuyerDto(reject);
         log.info("Reject id={} for purchases id={} successfully created", reject.getId(), purchase.getId());
         return rejectDto;
+    }
+
+    @Override
+    public Set<PurchaseDto> getAllOwnSales(Long sellerId) {
+        User buyer = checkAndGetUser(sellerId);
+        Set<Purchase> sellsSet = repository.findAllBySeller(buyer);
+        Set<PurchaseDto> sellsDtoSet = sellsSet.stream()
+                .map(PurchaseMapper::toPurchaseDto)
+                .collect(Collectors.toSet());
+        log.info("Set of sells of user id={} successfully saved", sellerId);
+        return sellsDtoSet;
     }
 
     private User checkAndGetUser(Long userId) {

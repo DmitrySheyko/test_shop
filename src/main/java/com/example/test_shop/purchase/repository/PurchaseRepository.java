@@ -17,4 +17,7 @@ public interface PurchaseRepository extends JpaRepository<Purchase, Long> {
     Set<Purchase> findAllByBuyer(User buyer);
 
     Optional<Purchase> findFirstByBuyerIdAndProductId(Long BuyerId, long product);
+
+    Set<Purchase> findAllBySeller(User buyer);
+
 }

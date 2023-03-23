@@ -41,3 +41,8 @@ application:
   data:
     days-for-return-products: 1
     commission-of-shop: 0.05
+
+# Administrator data
+    admin-username: "admin"
+    admin-password: "admin"
+    admin-email: "admin@email.com"

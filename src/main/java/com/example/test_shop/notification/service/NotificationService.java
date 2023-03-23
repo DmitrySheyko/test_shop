@@ -16,5 +16,5 @@ public interface NotificationService {
     NotificationDto add(NewNotificationDto notificationDto);
 
 
-    Set<NotificationDto> getAllbyUserId(Long userId);
+    Set<NotificationDto> getAllByUserId(Long userId);
 }

@@ -55,11 +55,20 @@ public class Purchase {
     @Column(name = "price_for_unit")
     private Double priceForUnit;
 
-    @Column(name = "total_sum")
-    private Double totalSum;
+    @Column(name = "total_sum_without_discount")
+    private Double totalSumWithoutDiscount;
+
+    @Column(name = "total_sum_with_discount")
+    private Double totalSumWithDiscount;
 
     @Column(name = "shop_commission_sum")
-    private Double shopCommission;
+    private Double shopCommissionSum;
+
+    @Column(name = "discount_sum")
+    private Double discountSum;
+
+    @Column(name = "seller_income_sum")
+    private Double sellerIncomeSum;
 
     @Column(name = "purchase_date_time")
     @CreationTimestamp

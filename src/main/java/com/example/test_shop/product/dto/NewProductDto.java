@@ -1,10 +1,7 @@
 package com.example.test_shop.product.dto;
 
 import com.example.test_shop.product.model.Product;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Data;
 
@@ -26,7 +23,8 @@ public class NewProductDto {
     @Positive(message = "CompanyId should be positive")
     private Long companyId;
 
-    @NotNull(message = "Price can't be null")
+    @DecimalMin(value = "0.01", message = "Price can't be less than 0.01" )
+    @Digits(integer = 9, fraction = 2)
     private Double price;
 
     @PositiveOrZero(message = "Quantity can't be less than null")
