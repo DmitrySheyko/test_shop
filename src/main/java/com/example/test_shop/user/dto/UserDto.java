@@ -4,6 +4,8 @@ import com.example.test_shop.user.model.User;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 /**
  * Class of dto for admin getting information about new {@link User}
  *
@@ -19,5 +21,7 @@ public class UserDto {
     private String password;
     private Double balance;
     private String status;
+    private LocalDateTime createdOn;
+    private LocalDateTime updatedOn;
 
 }

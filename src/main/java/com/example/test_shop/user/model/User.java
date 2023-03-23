@@ -3,7 +3,10 @@ package com.example.test_shop.user.model;
 import com.example.test_shop.notification.model.Notification;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -47,5 +50,13 @@ public class User {
 
     @Column(name = "role")
     private String role;
+
+    @Column(name = "created_un")
+    @CreationTimestamp
+    private LocalDateTime createdOn;
+
+    @Column(name = "updatd_on")
+    @UpdateTimestamp
+    private LocalDateTime updatedOn;
 
 }

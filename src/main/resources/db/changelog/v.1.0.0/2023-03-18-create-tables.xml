@@ -26,6 +26,13 @@
             <column name="role" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
+            <column name="created_on" type="timestamp">
+                <constraints nullable="true"/>
+            </column>
+            <column name="updated_on" type="timestamp">
+                <constraints nullable="true"/>
+            </column>
+
         </createTable>
         <addAutoIncrement columnDataType="bigint"
                           columnName="id"
