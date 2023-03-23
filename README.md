@@ -20,7 +20,10 @@ Tests should be imported in Postman.
 
 ### Launching:
 From IDEA: 
-1) launch class _src/main/java/com/dmitrySheyko/kameleoon_test_task/KameleoonTestTaskApplication.java_.
+1) launch class _src/main/java/com/dmitrySheyko/kameleoon_test_task/KameleoonTestTaskApplication.java_.  
+PROFILES: 
+- for running with inmemory H2 database, please use empty prifile;  
+- for running with PostgreSQL database, please use _postgres_ prifile;  
 
 Admin;
 username: admin;  
