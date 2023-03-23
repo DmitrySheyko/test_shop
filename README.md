@@ -4,9 +4,10 @@
 - java version: 18 (Amazon Corretto 18.0.2);
 - Spring Boot version: 3.0.4;
 - Spring Boot security (used Basic authentification);
-- database: h2;
+- database: h2, PostgreSQL (for PostgreSQL, please use _postgres_ prifile);
 - database version control: liquibase;
-- springdoc-openapi v2.0.2
+- springdoc-openapi v2.0.2;
+- sl4j.
 
 ### Tests:
 Tests for Postman presented in folder __Postman_test__  
