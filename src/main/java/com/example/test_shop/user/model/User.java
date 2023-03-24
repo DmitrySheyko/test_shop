@@ -45,17 +45,17 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
-    @OneToMany(cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private Set<Notification> notificationSet = new HashSet<>();
 
     @Column(name = "role")
     private String role;
 
-    @Column(name = "created_un")
+    @Column(name = "created_on")
     @CreationTimestamp
     private LocalDateTime createdOn;
 
-    @Column(name = "updatd_on")
+    @Column(name = "updated_on")
     @UpdateTimestamp
     private LocalDateTime updatedOn;
 

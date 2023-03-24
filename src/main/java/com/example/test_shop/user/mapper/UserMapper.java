@@ -27,6 +27,7 @@ public class UserMapper {
                     .password(user.getPassword())
                     .balance(user.getBalance())
                     .status(user.getStatus().name())
+                    .role(user.getRole())
                     .createdOn(user.getCreatedOn())
                     .updatedOn(user.getUpdatedOn())
                     .build();

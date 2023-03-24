@@ -8,16 +8,16 @@ spring:
         dialect: org.hibernate.dialect.H2Dialect
 
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
 
   sql:
     init:
       mode: always
+#      data-locations: data-test.sql
 
   liquibase:
     enabled: true
     change-log: db/changelog/db.changelog-master.xml
-    contexts: prod
 
   datasource:
     driver-class-name: org.h2.Driver
@@ -47,4 +47,3 @@ application:
     admin-username: "admin"
     admin-password: "admin"
     admin-email: "admin@email.com"
-

@@ -292,5 +292,19 @@
                           tableName="rates"/>
     </changeSet>
 
+<!--    <changeSet id="2023-03-18-create-table-user-notification" author="DmitrySheyko">-->
+<!--        <createTable tableName="user_notification">-->
+<!--        <column name="user_id" type="bigint">-->
+<!--            <constraints nullable="false" foreignKeyName="fk_user_notification_user_id" references="users(id)"-->
+<!--            deleteCascade="true"/>-->
+<!--        </column>-->
+<!--        <column name="notification_id" type="bigint">-->
+<!--            <constraints nullable="false" foreignKeyName="fk_user_notification_notification_id" references="notifications(id)"-->
+<!--            deleteCascade="true"/>-->
+<!--        </column>-->
+<!--        </createTable>-->
+<!--        <addUniqueConstraint tableName="user_notification" columnNames="user_id, notification_id"/>-->
+<!--    </changeSet>-->
+
 
 </databaseChangeLog>

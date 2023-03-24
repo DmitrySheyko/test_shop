@@ -21,6 +21,7 @@ public class UserDto {
     private String password;
     private Double balance;
     private String status;
+    private String role;
     private LocalDateTime createdOn;
     private LocalDateTime updatedOn;
 
