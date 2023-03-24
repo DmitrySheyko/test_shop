@@ -4,9 +4,10 @@
 - java version: 18 (Amazon Corretto 18.0.2);
 - Spring Boot version: 3.0.4;
 - Spring Boot security (used Basic authentification);
-- database: h2;
+- database: h2, PostgreSQL (for PostgreSQL, please use _postgres_ prifile);
 - database version control: liquibase;
-- springdoc-openapi v2.0.2
+- springdoc-openapi v2.0.2;
+- sl4j.
 
 ### Tests:
 Tests for Postman presented in folder __Postman_test__  
@@ -16,7 +17,7 @@ Tests should be imported in Postman.
 
 ### Functions:
  - creation of user accounts, companies, products, discounts, purchases, notifications, rates, comments;
- - user has function bay poduct and return product in 25 hours;
+ - user has function buy poduct and return it in 24 hours;
 
 ### Launching:
 From IDEA: 
