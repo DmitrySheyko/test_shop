@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -23,6 +24,7 @@ class UserServiceImplTest {
 
     private final UserService service;
     private final UserRepository repository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Test
     void add() {
@@ -37,7 +39,7 @@ class UserServiceImplTest {
          * Создаваемый в тесте пользователь должен иметь Id = 6
          */
         Assertions.assertEquals("TestName_6", userDto.getUsername());
-        Assertions.assertNotNull(userDto.getPassword());
+        Assertions.assertTrue(passwordEncoder.matches("TestPassword_6", userDto.getPassword()));
         Assertions.assertEquals("Test_6@email.ru", userDto.getEmail());
         Assertions.assertEquals("ROLE_USER", userDto.getRole());
         Assertions.assertEquals("ACTIVE", userDto.getStatus());
@@ -67,7 +69,7 @@ class UserServiceImplTest {
         UserDto updatedUserDto = service.update(updateDto, userForUpdateId);
         Assertions.assertEquals(1, updatedUserDto.getId());
         Assertions.assertEquals("TestName_1(updated)", updatedUserDto.getUsername());
-        Assertions.assertNotNull(updatedUserDto.getPassword());
+        Assertions.assertTrue(passwordEncoder.matches("TestPassword_1(updated)", updatedUserDto.getPassword()));
         Assertions.assertEquals("Test_1(updated)@email.ru", updatedUserDto.getEmail());
         Assertions.assertEquals("ROLE_USER", updatedUserDto.getRole());
         Assertions.assertEquals("BLOCKED", updatedUserDto.getStatus());
