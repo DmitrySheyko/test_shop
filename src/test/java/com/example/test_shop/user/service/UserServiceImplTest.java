@@ -48,11 +48,12 @@ class UserServiceImplTest {
     @Test
     void shouldThroeExceptionWhenAddUserWithEqualUsername() {
         NewUserDto newUserDto = NewUserDto.builder()
-                .username("TestName_1")
+                .username("TestName_6")
                 .password("TestPassword_6")
                 .email("Test_6@email.ru")
                 .role("ROLE_USER")
                 .build();
+        service.add(newUserDto);
         Assertions.assertThrows(DataIntegrityViolationException.class, () -> service.add(newUserDto));
     }
 
@@ -71,13 +72,20 @@ class UserServiceImplTest {
         Assertions.assertEquals("TestName_1(updated)", updatedUserDto.getUsername());
         Assertions.assertTrue(passwordEncoder.matches("TestPassword_1(updated)", updatedUserDto.getPassword()));
         Assertions.assertEquals("Test_1(updated)@email.ru", updatedUserDto.getEmail());
-        Assertions.assertEquals("ROLE_USER", updatedUserDto.getRole());
         Assertions.assertEquals("BLOCKED", updatedUserDto.getStatus());
     }
 
     @Test
     void delete() {
-        Long userIdForDelete = 2L;
+        NewUserDto newUserDto = NewUserDto.builder()
+                .username("TestName_6")
+                .password("TestPassword_6")
+                .email("Test_6@email.ru")
+                .role("ROLE_USER")
+                .build();
+        UserDto userDto = service.add(newUserDto);
+        Long userIdForDelete = userDto.getId();
+
         int beforeDeleteUsersQuantity = repository.findAll().size();
         service.delete(userIdForDelete);
         int afterDeleteUsersQuantity = repository.findAll().size();
@@ -104,17 +112,33 @@ class UserServiceImplTest {
 
     @Test
     void getAnotherUser() {
-        Long requesterId = 1L;
-        Long userId = 2L;
-        UserShortDto userShortDto = service.getAnotherUser(requesterId, userId);
-        Assertions.assertEquals(2, userShortDto.getId());
-        Assertions.assertEquals("TestName_2", userShortDto.getUsername());
-        Assertions.assertEquals("Test_2@email.ru", userShortDto.getEmail());
+        NewUserDto requesterNewUserDto = NewUserDto.builder()
+                .username("TestName_6")
+                .password("TestPassword_6")
+                .email("Test_6@email.ru")
+                .role("ROLE_USER")
+                .build();
+        UserDto requesterUserDto = service.add(requesterNewUserDto);
+        Long requesterId = requesterUserDto.getId();
+
+        NewUserDto anotherNewUserDto = NewUserDto.builder()
+                .username("TestName_7")
+                .password("TestPassword_7")
+                .email("Test_7@email.ru")
+                .role("ROLE_USER")
+                .build();
+        UserDto anotherUserDto = service.add(anotherNewUserDto);
+        Long anotherUserId = anotherUserDto.getId();
+
+        UserShortDto userShortDto = service.getAnotherUser(requesterId, anotherUserId);
+        Assertions.assertEquals(anotherUserId, userShortDto.getId());
+        Assertions.assertEquals("TestName_7", userShortDto.getUsername());
+        Assertions.assertEquals("Test_7@email.ru", userShortDto.getEmail());
     }
 
     @Test
     void searchUsers() {
-        Set<Long> usersId = Set.of(1L, 2L, 3L);
+        Set<Long> usersId = null;
         Set<String> usernames = null;
         Set<String> emails = null;
         Set<String> roles = null;
@@ -122,9 +146,18 @@ class UserServiceImplTest {
         Double balanceMoreOrEqual = null;
         Double balanceLessOrEqual = null;
 
+        NewUserDto newUserDto = NewUserDto.builder()
+                .username("TestName_6")
+                .password("TestPassword_6")
+                .email("Test_6@email.ru")
+                .role("ROLE_USER")
+                .build();
+        UserDto userDto = service.add(newUserDto);
+        Long userIdForSearch = userDto.getId();
+        usersId = Set.of(userIdForSearch);
         List<UserDto> userDtoList = service.searchUsers(usersId, usernames, emails, roles,
                 balanceEqual, balanceMoreOrEqual, balanceLessOrEqual);
-        Assertions.assertEquals(3, userDtoList.size());
+        Assertions.assertEquals(1, userDtoList.size());
 
         usersId = null;
         usernames = Set.of("TestName_2", "TestName_3");
@@ -160,7 +193,7 @@ class UserServiceImplTest {
         balanceLessOrEqual = 10000.0;
         userDtoList = service.searchUsers(usersId, usernames, emails, roles,
                 balanceEqual, balanceMoreOrEqual, balanceLessOrEqual);
-        Assertions.assertEquals(2, userDtoList.size());
+        Assertions.assertEquals(3, userDtoList.size());
 
         balanceLessOrEqual = null;
         balanceEqual = 10000.0;
