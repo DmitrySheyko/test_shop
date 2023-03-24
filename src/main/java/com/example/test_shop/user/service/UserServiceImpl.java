@@ -5,6 +5,7 @@ import com.example.test_shop.exceptions.ValidationException;
 import com.example.test_shop.user.dto.NewUserDto;
 import com.example.test_shop.user.dto.UserDto;
 import com.example.test_shop.user.dto.UserAdminUpdateDto;
+import com.example.test_shop.user.dto.UserShortDto;
 import com.example.test_shop.user.mapper.UserMapper;
 import com.example.test_shop.user.model.User;
 import com.example.test_shop.user.model.UserStatus;
@@ -90,17 +91,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public UserDto getAnotherUser(Long userId, Long anotherUserId) {
+    public UserShortDto getAnotherUser(Long userId, Long anotherUserId) {
         checkAndGetUser(userId);
         User anotherUser = checkAndGetUser(anotherUserId);
-        UserDto anotherUserDto = UserMapper.toUserDto(anotherUser);
+        UserShortDto anotherUserShoryDto = UserMapper.toUserShortDto(anotherUser);
         log.info("User id={} successfully received", anotherUserId);
-        return anotherUserDto;
+        return anotherUserShoryDto;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<UserDto> searchUsers(Set<String> usersId, Set<String> usernames, Set<String> emails, Set<String> roles,
+    public List<UserDto> searchUsers(Set<Long> usersId, Set<String> usernames, Set<String> emails, Set<String> roles,
                                      Double balanceEqual, Double balanceMoreOrEqual, Double balanceLessOrEqual) {
         List<User> usersSet = repository.searchUser(usersId, usernames, emails, roles, balanceEqual,
                 balanceMoreOrEqual, balanceLessOrEqual);

@@ -20,7 +20,7 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
     private EntityManager entityManager;
 
     @Override
-    public List<User> searchUser(Set<String> usersId, Set<String> usernames, Set<String> emails, Set<String> roles,
+    public List<User> searchUser(Set<Long> usersId, Set<String> usernames, Set<String> emails, Set<String> roles,
                                  Double balanceEqual, Double balanceMoreOrEqual, Double balanceLessOrEqual) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<User> query = cb.createQuery(User.class);

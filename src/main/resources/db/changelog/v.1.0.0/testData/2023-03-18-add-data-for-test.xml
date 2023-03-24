@@ -5,6 +5,15 @@
 
     <changeSet id="2023-03-18-create-table-users" author="DmitrySheyko" context="test">
         <insert tableName="users">
+            <column name="username" value="TestName_1"/>
+            <column name="password" value="TestPassword_1"/>
+            <column name="email" value="Test_1@email.ru"/>
+            <column name="balance" value="10000.0"/>
+            <column name="role" value="ROLE_USER"/>
+            <column name="user_status" value="ACTIVE"/>
+            <column name="created_on" value="2018-01-01T10:10:10"/>
+        </insert>
+        <insert tableName="users">
             <column name="username" value="TestName_2"/>
             <column name="password" value="TestPassword_2"/>
             <column name="email" value="Test_2@email.ru"/>
@@ -27,15 +36,6 @@
             <column name="password" value="TestPassword_4"/>
             <column name="email" value="Test_4@email.ru"/>
             <column name="balance" value="40000.0"/>
-            <column name="role" value="ROLE_USER"/>
-            <column name="user_status" value="ACTIVE"/>
-            <column name="created_on" value="2018-01-01T10:10:10"/>
-        </insert>
-        <insert tableName="users">
-            <column name="username" value="TestName_5"/>
-            <column name="password" value="TestPassword_5"/>
-            <column name="email" value="Test_5@email.ru"/>
-            <column name="balance" value="50000.0"/>
             <column name="role" value="ROLE_USER"/>
             <column name="user_status" value="ACTIVE"/>
             <column name="created_on" value="2018-01-01T10:10:10"/>

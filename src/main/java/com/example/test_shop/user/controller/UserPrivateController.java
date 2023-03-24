@@ -1,6 +1,7 @@
 package com.example.test_shop.user.controller;
 
 import com.example.test_shop.user.dto.UserDto;
+import com.example.test_shop.user.dto.UserShortDto;
 import com.example.test_shop.user.model.User;
 import com.example.test_shop.user.service.UserService;
 import jakarta.validation.constraints.Positive;
@@ -30,8 +31,8 @@ public class UserPrivateController {
 
     // Получение данных о другом пользователе
     @GetMapping("/{anotherUserId}")
-    public UserDto getAnotherUser(@Positive @PathVariable(value = "userId") Long userId,
-                                 @Positive @PathVariable(value = "anotherUserId") Long anotherUserId) {
+    public UserShortDto getAnotherUser(@Positive @PathVariable(value = "userId") Long userId,
+                                       @Positive @PathVariable(value = "anotherUserId") Long anotherUserId) {
         return service.getAnotherUser(userId, anotherUserId);
     }
 

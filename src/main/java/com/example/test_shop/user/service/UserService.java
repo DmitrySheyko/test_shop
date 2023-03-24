@@ -3,6 +3,7 @@ package com.example.test_shop.user.service;
 import com.example.test_shop.user.dto.NewUserDto;
 import com.example.test_shop.user.dto.UserDto;
 import com.example.test_shop.user.dto.UserAdminUpdateDto;
+import com.example.test_shop.user.dto.UserShortDto;
 import com.example.test_shop.user.model.User;
 
 import java.util.List;
@@ -23,9 +24,9 @@ public interface UserService {
 
     UserDto getOwnAccount(Long userId);
 
-    UserDto getAnotherUser(Long userId, Long anotherUserId);
+    UserShortDto getAnotherUser(Long userId, Long anotherUserId);
 
-    List<UserDto> searchUsers(Set<String> usersId, Set<String> usernames, Set<String> emails, Set<String> roles,
+    List<UserDto> searchUsers(Set<Long> usersId, Set<String> usernames, Set<String> emails, Set<String> roles,
                               Double balanceEqual, Double balanceMoreOrEqual, Double balanceLessOrEqual);
 
 }

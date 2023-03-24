@@ -45,7 +45,7 @@ public class UserAdminController {
 
     // Поиск пользователей по параметрам
     @GetMapping
-    public List<UserDto> searchUsers(@RequestParam(value = "usersId", required = false) Set<String> usersId,
+    public List<UserDto> searchUsers(@RequestParam(value = "usersId", required = false) Set<Long> usersId,
                                      @RequestParam(value = "usernames", required = false) Set<String> usernames,
                                      @RequestParam(value = "emails", required = false) Set<String> emails,
                                      @RequestParam(value = "roles", required = false) Set<String> roles,
