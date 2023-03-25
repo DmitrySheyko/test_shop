@@ -1,5 +1,7 @@
 package com.example.test_shop.user.mapper;
 
+import com.example.test_shop.company.mapper.CompanyMapper;
+import com.example.test_shop.notification.mapper.NotificationMapper;
 import com.example.test_shop.user.dto.NewUserDto;
 import com.example.test_shop.user.dto.UserDto;
 import com.example.test_shop.user.dto.UserAdminUpdateDto;
@@ -7,6 +9,9 @@ import com.example.test_shop.user.dto.UserShortDto;
 import com.example.test_shop.user.model.User;
 import com.example.test_shop.user.model.UserStatus;
 import org.springframework.stereotype.Component;
+
+import java.util.Collections;
+import java.util.stream.Collectors;
 
 /**
  * Class of mapper for {@link User}
@@ -28,6 +33,12 @@ public class UserMapper {
                     .balance(user.getBalance())
                     .status(user.getStatus().name())
                     .role(user.getRole())
+                    .companiesList(user.getCompaniesList() == null
+                            ? Collections.emptyList()
+                            : user.getCompaniesList().stream().map(CompanyMapper::toShortDto).collect(Collectors.toList()))
+                    .notificationsList(user.getNotificationsList() == null
+                            ? Collections.emptyList()
+                            : user.getNotificationsList().stream().map(NotificationMapper::toDto).collect(Collectors.toList()))
                     .createdOn(user.getCreatedOn())
                     .updatedOn(user.getUpdatedOn())
                     .build();

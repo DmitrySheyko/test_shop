@@ -73,15 +73,15 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<CompanyDto> searchCompany(Set<Integer> companiesId, Set<String> names, Set<String> statusesString,
-                                          Set<String> ownersId, Set<String> description) {
+    public List<CompanyDto> searchCompany(Set<Long> companiesId, String name, Set<String> statusesString,
+                                          Set<Long> ownersId, String description) {
         Set<CompanyStatus> statusesEnum;
         if (statusesString != null && !statusesString.isEmpty()) {
             statusesEnum = statusesString.stream().map(CompanyStatus::valueOf).collect(Collectors.toSet());
         } else {
             statusesEnum = null;
         }
-        List<Company> companiesList = repository.searchCompany(companiesId, names, statusesEnum, ownersId, description);
+        List<Company> companiesList = repository.searchCompany(companiesId, name, statusesEnum, ownersId, description);
         List<CompanyDto> companiesDtoList = companiesList.stream().map(CompanyMapper::toDto).toList();
         log.info("Set of companies successfully received");
         return companiesDtoList;

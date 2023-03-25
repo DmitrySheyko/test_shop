@@ -39,12 +39,12 @@ public class CompanyAdminController {
 
     // Получение администратором списка компаний по их статусу, например компаний ожидающих активации
     @GetMapping
-    public List<CompanyDto> searchCompany(@RequestParam(value = "companiesId", required = false) Set<Integer> companiesId,
-                                          @RequestParam(value = "name", required = false) Set<String> names,
+    public List<CompanyDto> searchCompany(@RequestParam(value = "companiesId", required = false) Set<Long> companiesId,
+                                          @RequestParam(value = "name", required = false) String name,
                                           @RequestParam(value = "statuses", required = false) Set<String> statuses,
-                                          @RequestParam(value = "ownerId", required = false) Set<String> ownersId,
-                                          @RequestParam(value = "description", required = false) Set<String> description) {
-        return service.searchCompany(companiesId, names, statuses, ownersId, description);
+                                          @RequestParam(value = "ownerId", required = false) Set<Long> ownersId,
+                                          @RequestParam(value = "description", required = false) String description) {
+        return service.searchCompany(companiesId, name, statuses, ownersId, description);
     }
 
 }

@@ -34,8 +34,8 @@ public class Company {
     @Column(name = "description")
     private String description;
 
-    @ManyToOne(cascade = CascadeType.DETACH)
-    @JoinColumn(name = "owner_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
     private User owner;
 
     @Column(name = "logo_url")

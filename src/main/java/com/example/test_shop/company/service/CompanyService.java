@@ -21,7 +21,7 @@ public interface CompanyService {
 
     CompanyDto update(CompanyAdminUpdateDto companyDto, Long companyId);
 
-    List<CompanyDto> searchCompany(Set<Integer> companiesId, Set<String> names, Set<String> statusesString,
-                                   Set<String> ownersId, Set<String> description);
+    List<CompanyDto> searchCompany(Set<Long> companiesId, String name, Set<String> statusesString,
+                                   Set<Long> ownersId, String description);
 
 }

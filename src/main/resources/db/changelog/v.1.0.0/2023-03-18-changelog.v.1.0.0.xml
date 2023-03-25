@@ -8,6 +8,5 @@
     </changeSet>
 
     <include file="2023-03-18-create-tables.xml" relativeToChangelogFile="true"/>
-    <include file="testData/2023-03-18-add-data-for-test.xml" relativeToChangelogFile="true" context="test"/>
 
 </databaseChangeLog>

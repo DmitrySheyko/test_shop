@@ -60,7 +60,8 @@
                 <constraints nullable="true"/>
             </column>
             <column name="owner_id" type="bigint">
-                <constraints nullable="true" foreignKeyName="fk_companies_owner_id" references="users(id)"/>
+                <constraints nullable="true" foreignKeyName="fk_companies_owner_id" references="users(id)"
+                             deleteCascade="false"/>
             </column>
             <column name="logo_url" type="varchar(255)">
                 <constraints nullable="true"/>
@@ -291,5 +292,20 @@
                           startWith="1"
                           tableName="rates"/>
     </changeSet>
+
+
+    <changeSet id="2023-03-18-create-table-companies_products_set" author="DmitrySheyko">
+        <createTable tableName="companies_products_set">
+            <column name="user_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_companies_products_set_company_user_id" references="users(id)"
+                             deleteCascade="true"/>
+            </column>
+            <column name="company_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_companies_products_set_company_idd" references="companies(id)"
+                             deleteCascade="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
 
 </databaseChangeLog>

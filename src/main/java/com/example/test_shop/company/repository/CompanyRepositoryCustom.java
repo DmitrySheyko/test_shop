@@ -13,7 +13,7 @@ import java.util.Set;
  */
 public interface CompanyRepositoryCustom {
 
-    List<Company> searchCompany(Set<Integer> companiesId, Set<String> names, Set<CompanyStatus> statuses,
-                                Set<String> ownersId, Set<String> description);
+    List<Company> searchCompany(Set<Long> companiesId, String name, Set<CompanyStatus> statuses,
+                                Set<Long> ownersId, String description);
 
 }

@@ -1,5 +1,6 @@
 package com.example.test_shop.user.model;
 
+import com.example.test_shop.company.model.Company;
 import com.example.test_shop.notification.model.Notification;
 import jakarta.persistence.*;
 import lombok.*;
@@ -7,8 +8,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class o {@link User} entity
@@ -45,8 +46,11 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
+    @OneToMany (mappedBy = "owner")
+    private List<Company> companiesList = new ArrayList<>();
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private Set<Notification> notificationSet = new HashSet<>();
+    private List<Notification> notificationsList = new ArrayList<>();
 
     @Column(name = "role")
     private String role;

@@ -24,8 +24,8 @@ public class CompanyRepositoryCustomImpl implements CompanyRepositoryCustom {
     private EntityManager entityManager;
 
     @Override
-    public List<Company> searchCompany(Set<Integer> companiesId, Set<String> names, Set<CompanyStatus> statuses,
-                                       Set<String> ownersId, Set<String> description) {
+    public List<Company> searchCompany(Set<Long> companiesId, String name, Set<CompanyStatus> statuses,
+                                       Set<Long> ownersId, String description) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Company> query = cb.createQuery(Company.class);
         Root<Company> company = query.from(Company.class);
@@ -35,17 +35,18 @@ public class CompanyRepositoryCustomImpl implements CompanyRepositoryCustom {
         if (companiesId != null && !companiesId.isEmpty()) {
             predicates.add(cb.and(company.get("id").in(companiesId)));
         }
-        if (names != null && !names.isEmpty()) {
-            predicates.add(cb.and(company.get("name").in(names)));
+        if (name != null && !name.isEmpty()) {
+            predicates.add(cb.and(company.get("name").in(name)));
         }
         if (statuses != null && !statuses.isEmpty()) {
             predicates.add(cb.and(company.get("status").in(statuses)));
         }
         if (ownersId != null && !ownersId.isEmpty()) {
-            predicates.add(cb.and(company.get("email").in(ownersId)));
+            predicates.add(cb.and(company.get("owner").in(ownersId)));
         }
         if (description != null && !description.isEmpty()) {
-            predicates.add(cb.and(company.get("role").in(description)));
+//            predicates.add(cb.and(company.get("description").in(description)));
+            predicates.add(cb.like(company.get("description"), "%" + description + "%"));
         }
 
         query.select(company).where(cb.or(predicates.toArray(new Predicate[predicates.size()])));

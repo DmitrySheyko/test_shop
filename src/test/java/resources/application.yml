@@ -18,7 +18,6 @@ spring:
   liquibase:
     enabled: true
     change-log: db/changelog/db.changelog-master.xml
-    contexts: test
 
   datasource:
     driver-class-name: org.h2.Driver
