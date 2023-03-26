@@ -45,7 +45,7 @@ public class Company {
     @Enumerated(EnumType.STRING)
     private CompanyStatus status;
 
-    @OneToMany
+    @OneToMany (mappedBy = "company")
     private Set<Product> productsSet = new HashSet<>();
 
 }

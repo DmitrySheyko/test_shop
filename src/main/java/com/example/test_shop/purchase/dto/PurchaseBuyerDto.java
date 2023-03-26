@@ -20,14 +20,19 @@ public class PurchaseBuyerDto {
 
     private Long id;
     private String type;
-    private CompanyShortDto sellCompany;
+    private CompanyShortDto company;
+    private String companyName;
+    private Long companyId;
     private UserShortDto buyer;
     private ProductShortDto product;
+    private Long productId;
+    private String productName;
     private Integer quantity;
     private Double priceForUnit;
     private Double totalSumWithoutDiscount;
     private Double totalSumWithDiscount;
     private Double discountSum;
     private LocalDateTime purchaseDateTime;
+    private Boolean isRejected;
 
 }

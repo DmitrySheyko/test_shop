@@ -9,6 +9,7 @@ public enum CompanyStatus {
 
     PENDING,
     ACTIVE,
-    BLOCKED
+    BLOCKED,
+    DELETED
 
 }

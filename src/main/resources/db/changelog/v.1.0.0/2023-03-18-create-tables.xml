@@ -4,7 +4,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.17.xsd">
 
     <changeSet id="2023-03-18-create-table-users" author="DmitrySheyko">
-        <createTable tableName="users">
+        <createTable tableName="users" schemaName="PUBLIC">
             <column name="id" type="bigint" generationType="identity">
                 <constraints primaryKey="true"/>
             </column>
@@ -59,7 +59,7 @@
             <column name="description" type="varchar(1000)">
                 <constraints nullable="true"/>
             </column>
-            <column name="owner_id" type="bigint">
+            <column name="owner_id" type="bigint" defaultOnNull="true">
                 <constraints nullable="true" foreignKeyName="fk_companies_owner_id" references="users(id)"
                              deleteCascade="false"/>
             </column>
@@ -141,6 +141,9 @@
             <column name="characteristics" type="varchar(1000)">
                 <constraints nullable="true"/>
             </column>
+            <column name="product_status" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
         <addAutoIncrement columnDataType="bigint"
                           columnName="id"
@@ -157,20 +160,36 @@
             <column name="id" type="bigint">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
-            <column name="type_of_purchase" type="Varchar(50)">
+            <column name="type_of_purchase" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
             <column name="company_id" type="bigint">
-                <constraints nullable="false" foreignKeyName="fk_purchases_company_id" references="companies(id)"/>
+                <constraints nullable="true" foreignKeyName="fk_purchases_company_id" references="companies(id)"
+                             deleteCascade="false"/>
+            </column>
+            <column name="company_name" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="company_id_copy" type="bigint">
+                <constraints nullable="false"/>
             </column>
             <column name="seller_id" type="bigint">
-                <constraints nullable="false" foreignKeyName="fk_purchases_seller_id" references="users(id)"/>
+                <constraints nullable="true" foreignKeyName="fk_purchases_seller_id" references="users(id)"
+                             deleteCascade="false"/>
             </column>
             <column name="buyer_id" type="bigint">
-                <constraints nullable="false" foreignKeyName="fk_purchases_buyer_id" references="users(id)"/>
+                <constraints nullable="true" foreignKeyName="fk_purchases_buyer_id" references="users(id)"
+                             deleteCascade="false"/>
             </column>
             <column name="product_id" type="bigint">
-                <constraints nullable="false" foreignKeyName="fk_purchases_product_id" references="products(id)"/>
+                <constraints nullable="true" foreignKeyName="fk_purchases_product_id" references="products(id)"
+                             deleteCascade="false"/>
+            </column>
+            <column name="product_name" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_id_copy" type="bigint">
+                <constraints nullable="false"/>
             </column>
             <column name="quantity" type="integer">
                 <constraints nullable="false"/>
@@ -195,6 +214,15 @@
             </column>
             <column name="purchase_date_time" type="timestamp">
                 <constraints nullable="false"/>
+            </column>
+            <column name="is_rejected" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reject_for_purchase_id" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+            <column name="rejection_id" type="bigint">
+                <constraints nullable="true"/>
             </column>
         </createTable>
         <addAutoIncrement columnDataType="bigint"
@@ -294,18 +322,18 @@
     </changeSet>
 
 
-    <changeSet id="2023-03-18-create-table-companies_products_set" author="DmitrySheyko">
-        <createTable tableName="companies_products_set">
-            <column name="user_id" type="bigint">
-                <constraints nullable="false" foreignKeyName="fk_companies_products_set_company_user_id" references="users(id)"
-                             deleteCascade="true"/>
-            </column>
-            <column name="company_id" type="bigint">
-                <constraints nullable="false" foreignKeyName="fk_companies_products_set_company_idd" references="companies(id)"
-                             deleteCascade="true"/>
-            </column>
-        </createTable>
-    </changeSet>
+    <!--    <changeSet id="2023-03-18-create-table-companies_products_set" author="DmitrySheyko">-->
+    <!--        <createTable tableName="companies_products_set">-->
+    <!--            <column name="user_id" type="bigint">-->
+    <!--                <constraints nullable="false" foreignKeyName="fk_companies_products_set_company_user_id" references="users(id)"-->
+    <!--                             deleteCascade="true"/>-->
+    <!--            </column>-->
+    <!--            <column name="company_id" type="bigint">-->
+    <!--                <constraints nullable="false" foreignKeyName="fk_companies_products_set_company_idd" references="companies(id)"-->
+    <!--                             deleteCascade="true"/>-->
+    <!--            </column>-->
+    <!--        </createTable>-->
+    <!--    </changeSet>-->
 
 
 </databaseChangeLog>

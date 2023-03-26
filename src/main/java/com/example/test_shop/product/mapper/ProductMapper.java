@@ -6,10 +6,11 @@ import com.example.test_shop.product.dto.ProductDto;
 import com.example.test_shop.product.dto.ProductShortDto;
 import com.example.test_shop.product.dto.ProductUpdateDto;
 import com.example.test_shop.product.model.Product;
+import com.example.test_shop.product.model.ProductStatus;
 import com.example.test_shop.rate.model.Rate;
 import org.springframework.stereotype.Component;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * Class of mapper for {@link Product} entity
@@ -33,12 +34,13 @@ public class ProductMapper {
                     .discount(DiscountMapper.toDiscountShortDto(product.getDiscount()))
                     .keyWords(product.getKeyWords())
                     .characteristics(product.getCharacteristics())
-                    .rates(calculateRate(product.getRatesSet()))
+                    .rates(calculateRate(product.getRatesList()))
+                    .satus(product.getStatus().name())
                     .build();
         }
     }
 
-    public static Product toDiscount(ProductUpdateDto productDto) {
+    public static Product toProduct(ProductUpdateDto productDto) {
         if (productDto == null) {
             return null;
         } else {
@@ -50,6 +52,9 @@ public class ProductMapper {
                     .quantity(productDto.getQuantity())
                     .keyWords(productDto.getKeyWords())
                     .characteristics(productDto.getCharacteristics())
+                    .status(productDto.getStatus() != null
+                            ? ProductStatus.valueOf(productDto.getStatus())
+                            : null)
                     .build();
         }
     }
@@ -61,20 +66,21 @@ public class ProductMapper {
             return ProductShortDto.builder()
                     .id(product.getId())
                     .name(product.getName())
+                    .status(product.getStatus().name())
                     .build();
         }
     }
 
     // Метод расчитывает и возвращает среднее арифметическое оценок
-    private static String calculateRate(Set<Rate> ratesSet) {
-        if (ratesSet.isEmpty()) {
+    private static String calculateRate(List<Rate> rateList) {
+        if (rateList.isEmpty()) {
             return null;
         }
-        Float sum = 0F;
-        for (Rate rate : ratesSet) {
+        float sum = 0F;
+        for (Rate rate : rateList) {
             sum += (float) rate.getRate();
         }
-        return String.format("%.1f", sum / (float) ratesSet.size());
+        return String.format("%.1f", sum / (float) rateList.size());
     }
 
 }

@@ -590,6 +590,52 @@
 			"response": []
 		},
 		{
+			"name": "User 2 get own account",
+			"protocolProfileBehavior": {
+				"tlsPreferServerCiphers": true
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "Password_1",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "Username_1",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic base64('admin^admin');",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/user/2/notification",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"2",
+						"notification"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Admin activate company 1",
 			"request": {
 				"auth": {

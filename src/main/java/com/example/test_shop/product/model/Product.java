@@ -3,12 +3,13 @@ package com.example.test_shop.product.model;
 import com.example.test_shop.comment.model.Comment;
 import com.example.test_shop.company.model.Company;
 import com.example.test_shop.discount.model.Discount;
+import com.example.test_shop.purchase.model.Purchase;
 import com.example.test_shop.rate.model.Rate;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class of {@link Product} entity
@@ -51,7 +52,7 @@ public class Product {
     private Discount discount;
 
     @OneToMany(mappedBy = "product")
-    private Set<Comment> commentsSet = new HashSet<>();
+    private List<Comment> commentsList = new ArrayList<>();
 
     @Column(name = "key_words")
     private String keyWords;
@@ -60,6 +61,13 @@ public class Product {
     private String characteristics;
 
     @OneToMany(mappedBy = "product")
-    private Set<Rate> ratesSet = new HashSet<>();
+    private List<Rate> ratesList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product")
+    private List<Purchase> purchaseList = new ArrayList<>();
+
+    @Column(name = "product_status")
+    @Enumerated(EnumType.STRING)
+    private ProductStatus status;
 
 }

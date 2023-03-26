@@ -8,7 +8,6 @@ import com.example.test_shop.product.dto.ProductUpdateDto;
 import com.example.test_shop.product.model.Product;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Interface of service for {@link Product} entity
@@ -21,10 +20,10 @@ public interface ProductService {
 
     ProductDto update(ProductUpdateDto productDto, Long userId);
 
-    String delete(Long userId, Long productId);
+    ProductDto delete(Long userId, Long productId);
 
-    List<ProductShortDto> getAll(Long userId, Integer from, Integer size);
+    List<ProductShortDto> getAllActive(Long userId, Integer from, Integer size);
 
-    Set<CommentDto> getComments(Long userId, Long productId);
+    List<CommentDto> getComments(Long userId, Long productId);
 
 }

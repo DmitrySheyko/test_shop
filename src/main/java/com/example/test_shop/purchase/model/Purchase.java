@@ -34,8 +34,16 @@ public class Purchase {
     private PurchaseType type;
 
     @ManyToOne
-    @JoinColumn(name = "company_id",nullable = false)
+    @JoinColumn(name = "company_id")
     private Company company;
+
+    // Для сохранения информации при удвлении организации
+    @Column(name = "company_id_copy")
+    private Long companyId;
+
+    // Для сохранения информации при удвлении организации
+    @Column(name = "company_name")
+    private String companyName;
 
     @ManyToOne
     @JoinColumn(name = "seller_id",nullable = false)
@@ -46,8 +54,16 @@ public class Purchase {
     private User buyer;
     
     @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
+    @JoinColumn(name = "product_id")
     private Product product;
+
+    // Для сохранения информации при удвлении организации
+    @Column(name = "product_id_copy")
+    private Long productId;
+
+    // Для сохранения информации при удвлении организации
+    @Column(name = "product_name")
+    private String productName;
 
     @Column(name = "quantity")
     private Integer quantity;
@@ -73,5 +89,14 @@ public class Purchase {
     @Column(name = "purchase_date_time")
     @CreationTimestamp
     private LocalDateTime purchaseDateTime;
+
+    @Column(name = "is_rejected")
+    private boolean isRejected;
+
+    @Column(name = "reject_for_purchase_id")
+    private Long rejectForPurchaseId;
+
+    @Column(name = "rejection_id")
+    private Long rejectionId;
 
 }

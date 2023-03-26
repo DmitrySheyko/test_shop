@@ -31,9 +31,9 @@ public class CompanyAdminController {
         return service.update(companyDto, companyId);
     }
 
-    // Удаление администратором компании
+    // Удаление компании администратором
     @DeleteMapping("/{companyId}")
-    public String delete(@Positive @PathVariable(value = "companyId") Long companyId) {
+    public CompanyDto delete(@Positive @PathVariable(value = "companyId") Long companyId) {
         return service.delete(companyId);
     }
 

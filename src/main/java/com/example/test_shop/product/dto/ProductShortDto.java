@@ -15,5 +15,6 @@ public class ProductShortDto {
 
     private Long id;
     private String name;
+    private String status;
 
 }

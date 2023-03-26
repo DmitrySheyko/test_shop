@@ -2,21 +2,15 @@ package com.example.test_shop.purchase.dto;
 
 import com.example.test_shop.company.dto.CompanyShortDto;
 import com.example.test_shop.product.dto.ProductShortDto;
-import com.example.test_shop.purchase.model.Purchase;
 import com.example.test_shop.user.dto.UserShortDto;
 import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
-/**
- * Class of dto for getting full information about {@link Purchase} entity
- *
- * @author DmitrySheyko
- */
 @Data
 @Builder
-public class PurchaseDto {
+public class RejectionDto {
 
     private Long id;
     private String type;
@@ -36,7 +30,6 @@ public class PurchaseDto {
     private Double discountSum;
     private Double sellerIncomeSum;
     private LocalDateTime purchaseDateTime;
-    private Boolean isRejected;
-    private Long rejectionId;
+    private Long rejectForPurchaseId;
 
 }

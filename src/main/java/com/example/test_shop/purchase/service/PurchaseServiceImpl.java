@@ -11,6 +11,7 @@ import com.example.test_shop.configuration.AppProperties;
 import com.example.test_shop.purchase.dto.PurchaseBuyerDto;
 import com.example.test_shop.purchase.dto.NewPurchaseDto;
 import com.example.test_shop.purchase.dto.PurchaseDto;
+import com.example.test_shop.purchase.dto.RejectionDto;
 import com.example.test_shop.purchase.mapper.PurchaseMapper;
 import com.example.test_shop.purchase.model.Purchase;
 import com.example.test_shop.purchase.model.PurchaseType;
@@ -24,8 +25,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -88,9 +89,15 @@ public class PurchaseServiceImpl implements PurchaseService {
         Purchase purchase = Purchase.builder()
                 .type(PurchaseType.PURCHASE)
                 .company(sellCompany)
+                // Для сохранения информации при удвлении организации
+                .companyName(sellCompany.getName())
+                // Для сохранения информации при удвлении организации
+                .companyId(sellCompany.getId())
                 .seller(seller)
                 .buyer(buyer)
                 .product(product)
+                .productId(product.getId())
+                .productName(product.getName())
                 .quantity(purchaseDto.getQuantity())
                 .priceForUnit(purchaseDto.getPriceForUnit())
                 .totalSumWithoutDiscount(totalSumWithoutDiscount)
@@ -109,18 +116,18 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     @Override
     @Transactional(readOnly = true)
-    public Set<PurchaseBuyerDto> getAllOwnPurchases(Long buyerId) {
+    public List<PurchaseBuyerDto> getAllOwnPurchases(Long buyerId) {
         User buyer = checkAndGetUser(buyerId);
-        Set<Purchase> purchasesSet = repository.findAllByBuyer(buyer);
-        Set<PurchaseBuyerDto> purchaseBuyerDtoSet = purchasesSet.stream()
+        List<Purchase> purchasesSet = repository.findAllByBuyer(buyer);
+        List<PurchaseBuyerDto> purchaseBuyerDtoSet = purchasesSet.stream()
                 .map(PurchaseMapper::toPurchaseBuyerDto)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
         log.info("Set of purchases of user id={} successfully saved", buyerId);
         return purchaseBuyerDtoSet;
     }
 
     @Override
-    public PurchaseBuyerDto reject(Long buyerId, Long purchaseId) {
+    public RejectionDto reject(Long buyerId, Long purchaseId) {
         // Проверяем, существует и не заблокирован ли покупатель
         User buyer = checkAndGetUser(buyerId);
 
@@ -131,10 +138,17 @@ public class PurchaseServiceImpl implements PurchaseService {
         Purchase purchase = repository.findById(purchaseId)
                 .orElseThrow(() -> new NotFoundException(String.format("Purchase id=%s not found", purchaseId)));
 
+
         // Проверяемне прошел ли 1 день с момента покупки
         if (purchase.getPurchaseDateTime().plusDays(properties.getDaysForReturnProducts()).isBefore(LocalDateTime.now())) {
             throw new ValidationException(String.format("Product id=%s was purchased more than %s day ago", purchaseId,
                     properties.getDaysForReturnProducts()));
+        }
+
+        // Проверяем не было ли возврата ранее
+        if (purchase.isRejected()) {
+            throw new ValidationException(String.format("Rejection for purchase id=%s already made. Rejection id=%s",
+                    purchase.getId(), purchase.getRejectionId()));
         }
 
         // Мписываем сумму с продавца и осуществляем возврат денег покупателю
@@ -152,9 +166,15 @@ public class PurchaseServiceImpl implements PurchaseService {
         Purchase reject = Purchase.builder()
                 .type(PurchaseType.REJECT)
                 .company(purchase.getCompany())
+                // Для сохранения информации при удвлении организации
+                .companyName(purchase.getCompanyName())
+                // Для сохранения информации при удвлении организации
+                .companyId(purchase.getCompanyId())
                 .seller(purchase.getSeller())
                 .buyer(purchase.getBuyer())
                 .product(purchase.getProduct())
+                .productId(purchase.getProduct().getId())
+                .productName(purchase.getProduct().getName())
                 .quantity(purchase.getQuantity())
                 .priceForUnit(purchase.getPriceForUnit())
                 .totalSumWithoutDiscount(purchase.getTotalSumWithoutDiscount())
@@ -162,21 +182,30 @@ public class PurchaseServiceImpl implements PurchaseService {
                 .shopCommissionSum(purchase.getShopCommissionSum())
                 .discountSum(purchase.getDiscountSum())
                 .sellerIncomeSum(purchase.getSellerIncomeSum())
+                .isRejected(true)
+                .rejectForPurchaseId(purchase.getId())
+                .rejectionId(null)
                 .build();
         reject = repository.save(reject);
 
-        PurchaseBuyerDto rejectDto = PurchaseMapper.toPurchaseBuyerDto(reject);
+        // Добавляем в изначальную Purchase отметтку о том, что проведен возврат
+        purchase.setRejected(true);
+        purchase.setRejectForPurchaseId(null);
+        purchase.setRejectionId(reject.getId());
+        repository.save(purchase);
+
+        RejectionDto rejectDto = PurchaseMapper.toRejectionDto(reject);
         log.info("Reject id={} for purchases id={} successfully created", reject.getId(), purchase.getId());
         return rejectDto;
     }
 
     @Override
-    public Set<PurchaseDto> getAllOwnSales(Long sellerId) {
+    public List<PurchaseDto> getAllOwnSales(Long sellerId) {
         User buyer = checkAndGetUser(sellerId);
-        Set<Purchase> sellsSet = repository.findAllBySeller(buyer);
-        Set<PurchaseDto> sellsDtoSet = sellsSet.stream()
+        List<Purchase> sellsSet = repository.findAllBySeller(buyer);
+        List<PurchaseDto> sellsDtoSet = sellsSet.stream()
                 .map(PurchaseMapper::toPurchaseDto)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
         log.info("Set of sells of user id={} successfully saved", sellerId);
         return sellsDtoSet;
     }

@@ -25,6 +25,7 @@ public class ProductDto {
     private DiscountShortDto discount;
     private String keyWords;
     private String characteristics;
+    private String satus;
 
     @Digits(integer = 1, fraction = 1)
     private String rates;

@@ -4,6 +4,7 @@ import com.example.test_shop.company.mapper.CompanyMapper;
 import com.example.test_shop.product.mapper.ProductMapper;
 import com.example.test_shop.purchase.dto.PurchaseBuyerDto;
 import com.example.test_shop.purchase.dto.PurchaseDto;
+import com.example.test_shop.purchase.dto.RejectionDto;
 import com.example.test_shop.purchase.model.Purchase;
 import com.example.test_shop.user.mapper.UserMapper;
 import org.springframework.stereotype.Component;
@@ -23,15 +24,20 @@ public class PurchaseMapper {
             return PurchaseBuyerDto.builder()
                     .id(purchase.getId())
                     .type(purchase.getType().name())
-                    .sellCompany(CompanyMapper.toShortDto(purchase.getCompany()))
+                    .company(CompanyMapper.toShortDto(purchase.getCompany()))
+                    .companyId(purchase.getCompanyId())
+                    .companyName(purchase.getCompanyName())
                     .buyer(UserMapper.toUserShortDto(purchase.getBuyer()))
                     .product(ProductMapper.toShortDto(purchase.getProduct()))
+                    .productId(purchase.getProductId())
+                    .productName(purchase.getProductName())
                     .quantity(purchase.getQuantity())
                     .priceForUnit(purchase.getPriceForUnit())
                     .totalSumWithoutDiscount(purchase.getTotalSumWithoutDiscount())
                     .totalSumWithDiscount(purchase.getTotalSumWithDiscount())
                     .discountSum(purchase.getDiscountSum())
                     .purchaseDateTime(purchase.getPurchaseDateTime())
+                    .isRejected(purchase.isRejected())
                     .build();
         }
     }
@@ -44,9 +50,13 @@ public class PurchaseMapper {
                     .id(purchase.getId())
                     .type(purchase.getType().name())
                     .company(CompanyMapper.toShortDto(purchase.getCompany()))
+                    .companyId(purchase.getCompanyId())
+                    .companyName(purchase.getCompanyName())
                     .seller(UserMapper.toUserShortDto(purchase.getSeller()))
                     .buyer(UserMapper.toUserShortDto(purchase.getBuyer()))
                     .product(ProductMapper.toShortDto(purchase.getProduct()))
+                    .productId(purchase.getProductId())
+                    .productName(purchase.getProductName())
                     .quantity(purchase.getQuantity())
                     .priceForUnit(purchase.getPriceForUnit())
                     .totalSumWithoutDiscount(purchase.getTotalSumWithoutDiscount())
@@ -55,6 +65,37 @@ public class PurchaseMapper {
                     .discountSum(purchase.getDiscountSum())
                     .sellerIncomeSum(purchase.getSellerIncomeSum())
                     .purchaseDateTime(purchase.getPurchaseDateTime())
+                    .isRejected(purchase.isRejected())
+                    .rejectionId(purchase.getRejectionId())
+                    .build();
+        }
+    }
+
+    public static RejectionDto toRejectionDto(Purchase purchase) {
+        if (purchase == null) {
+            return null;
+        } else {
+            return RejectionDto.builder()
+                    .id(purchase.getId())
+                    .type(purchase.getType().name())
+                    .company(CompanyMapper.toShortDto(purchase.getCompany()))
+                    .companyId(purchase.getCompanyId())
+                    .companyName(purchase.getCompanyName())
+                    .seller(UserMapper.toUserShortDto(purchase.getSeller()))
+                    .buyer(UserMapper.toUserShortDto(purchase.getBuyer()))
+                    .product(ProductMapper.toShortDto(purchase.getProduct()))
+                    .productId(purchase.getProductId())
+                    .productName(purchase.getProductName())
+                    .quantity(purchase.getQuantity())
+                    .priceForUnit(purchase.getPriceForUnit())
+                    .totalSumWithoutDiscount(purchase.getTotalSumWithoutDiscount())
+                    .totalSumWithDiscount(purchase.getTotalSumWithDiscount())
+                    .shopCommissionSum(purchase.getShopCommissionSum())
+                    .discountSum(purchase.getDiscountSum())
+                    .sellerIncomeSum(purchase.getSellerIncomeSum())
+                    .purchaseDateTime(purchase.getPurchaseDateTime())
+                    .rejectForPurchaseId(purchase.getRejectForPurchaseId())
+
                     .build();
         }
     }

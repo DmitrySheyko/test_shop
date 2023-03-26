@@ -16,6 +16,7 @@ import com.example.test_shop.product.dto.ProductShortDto;
 import com.example.test_shop.product.dto.ProductUpdateDto;
 import com.example.test_shop.product.mapper.ProductMapper;
 import com.example.test_shop.product.model.Product;
+import com.example.test_shop.product.model.ProductStatus;
 import com.example.test_shop.product.repository.ProductRepository;
 import com.example.test_shop.user.model.User;
 import com.example.test_shop.user.model.UserStatus;
@@ -63,7 +64,8 @@ public class ProductServiceImpl implements ProductService {
                 .discount(discount)
                 .keyWords(productDto.getKeyWords())
                 .characteristics(productDto.getCharacteristics())
-                .ratesSet(new HashSet<>())
+                .status(ProductStatus.ACTIVE)
+                .ratesList(new ArrayList<>())
                 .build();
 
         newProduct = repository.save(newProduct);
@@ -76,7 +78,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductDto update(ProductUpdateDto productDto, Long userId) {
         checkIsUserExistAndActive(userId);
         Product productFromRepository = checkAndGetProduct(productDto.getId());
-        Product productForUpdate = ProductMapper.toDiscount(productDto);
+        Product productForUpdate = ProductMapper.toProduct(productDto);
 
         productFromRepository.setName(Optional.ofNullable(productForUpdate.getName())
                 .orElse(productFromRepository.getName()));
@@ -90,6 +92,8 @@ public class ProductServiceImpl implements ProductService {
                 .orElse(productFromRepository.getKeyWords()));
         productFromRepository.setCharacteristics(Optional.ofNullable(productForUpdate.getCharacteristics())
                 .orElse(productFromRepository.getCharacteristics()));
+        productFromRepository.setStatus(Optional.ofNullable(productForUpdate.getStatus())
+                .orElse(productFromRepository.getStatus()));
         if (productDto.getDiscountId() != null) {
             Discount discount = checkAndGetDiscount(productDto.getDiscountId());
             productFromRepository.setDiscount(discount);
@@ -101,34 +105,41 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public String delete(Long userId, Long productId) {
+    public ProductDto delete(Long userId, Long productId) {
         checkIsUserExistAndActive(userId);
         Product product = checkAndGetProduct(productId);
-        repository.delete(product);
 
+        // Меняестатус продукта на DELETE, из базы не удаляем
+        product.setStatus(ProductStatus.DELETED);
+        repository.save(product);
+
+        ProductDto productDto = ProductMapper.toDto(product);
         log.info("Product id={} successfully deleted", productId);
-        return String.format("Product id=%s successfully deleted", productId);
+        return productDto;
     }
 
     @Override
-    public List<ProductShortDto> getAll(Long userId, Integer from, Integer size) {
+    public List<ProductShortDto> getAllActive(Long userId, Integer from, Integer size) {
         checkIsUserExistAndActive(userId);
         int page = from / size;
         Pageable pageable = PageRequest.of(page, size, Sort.by("id"));
-        Page<Product> productsPage = repository.findAll(pageable);
+
+        // получаем из базы товары имеющие статус Active принадлежащие компаниям имеющим статус Active
+        Page<Product> productsPage = repository.findAllByStatusAndCompanyStatus(ProductStatus.ACTIVE,
+                CompanyStatus.ACTIVE, pageable);
         List<ProductShortDto> productsList = productsPage.stream().map(ProductMapper::toShortDto).toList();
         log.info("List of products successfully received");
         return productsList;
     }
 
     @Override
-    public Set<CommentDto> getComments(Long userId, Long productId) {
+    public List<CommentDto> getComments(Long userId, Long productId) {
         checkIsUserExistAndActive(userId);
         Product product = checkAndGetProduct(productId);
-        Set<Comment> commentSet = product.getCommentsSet();
-        Set<CommentDto> commentDtoSet = commentSet.stream().map(CommentMapper::toDto).collect(Collectors.toSet());
+        List<Comment> commentList = product.getCommentsList();
+        List<CommentDto> commentDtoList = commentList.stream().map(CommentMapper::toDto).collect(Collectors.toList());
         log.info("Set of comments for product id={} successfully received", productId);
-        return commentDtoSet;
+        return commentDtoList;
     }
 
     private void checkIsUserExistAndActive(Long userId) {

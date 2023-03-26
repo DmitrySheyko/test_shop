@@ -9,6 +9,9 @@ import com.example.test_shop.company.model.CompanyStatus;
 import com.example.test_shop.company.repository.CompanyRepository;
 import com.example.test_shop.exceptions.NotFoundException;
 import com.example.test_shop.exceptions.ValidationException;
+import com.example.test_shop.product.model.Product;
+import com.example.test_shop.product.model.ProductStatus;
+import com.example.test_shop.product.repository.ProductRepository;
 import com.example.test_shop.user.model.User;
 import com.example.test_shop.user.model.UserStatus;
 import com.example.test_shop.user.repository.UserRepository;
@@ -35,6 +38,7 @@ import java.util.stream.Collectors;
 public class CompanyServiceImpl implements CompanyService {
     private final CompanyRepository repository;
     private final UserRepository userRepository;
+    private final ProductRepository productRepository;
 
     @Override
     public CompanyDto add(NewCompanyDto companyDto, Long userId) {
@@ -49,12 +53,22 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public String delete(Long companyId) {
+    public CompanyDto delete(Long companyId) {
         Company company = repository.findById(companyId).orElseThrow(() -> new NotFoundException(String
                 .format("Company didn't delete. Company id=%s not found", companyId)));
-        repository.delete(company);
+
+        // При удалении компании меняем ее статус на DELETED, из базы не удаляем
+        company.setStatus(CompanyStatus.DELETED);
+        repository.save(company);
+
+        // Меняем статус товаров комании на DELETED, из базы не удаляем
+        List<Product> productList = productRepository.findAllByCompany(company);
+        productList.forEach(product -> product.setStatus(ProductStatus.DELETED));
+        productRepository.saveAll(productList);
+
+        CompanyDto companyDto = CompanyMapper.toDto(company);
         log.info("Company id={} successfully deleted", companyId);
-        return String.format("Company id=%s successfully deleted", companyId);
+        return companyDto;
     }
 
     @Override

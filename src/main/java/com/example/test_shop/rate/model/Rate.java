@@ -31,7 +31,7 @@ public class Rate {
     private Integer rate;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne(cascade = CascadeType.REMOVE)

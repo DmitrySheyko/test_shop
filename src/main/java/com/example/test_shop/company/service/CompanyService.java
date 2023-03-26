@@ -17,7 +17,7 @@ public interface CompanyService {
 
     CompanyDto add(NewCompanyDto companyDto, Long userId);
 
-    String delete(Long companyId);
+    CompanyDto delete(Long companyId);
 
     CompanyDto update(CompanyAdminUpdateDto companyDto, Long companyId);
 

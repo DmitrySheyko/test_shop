@@ -46,7 +46,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
-    @OneToMany (mappedBy = "owner")
+    @OneToMany(mappedBy = "owner")
     private List<Company> companiesList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)

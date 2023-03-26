@@ -25,5 +25,6 @@ public class ProductUpdateDto {
     private Long discountId;
     private String keyWords;
     private String characteristics;
+    private String status;
 
 }

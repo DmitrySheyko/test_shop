@@ -3,6 +3,7 @@ package com.example.test_shop.purchase.controller;
 import com.example.test_shop.purchase.dto.PurchaseBuyerDto;
 import com.example.test_shop.purchase.dto.NewPurchaseDto;
 import com.example.test_shop.purchase.dto.PurchaseDto;
+import com.example.test_shop.purchase.dto.RejectionDto;
 import com.example.test_shop.purchase.model.Purchase;
 import com.example.test_shop.purchase.service.PurchaseService;
 import jakarta.validation.Valid;
@@ -10,7 +11,7 @@ import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * Class user's controller for {@link Purchase} entity
@@ -32,20 +33,20 @@ public class PurchasePrivateController {
 
     // Получить список своих покупок
     @GetMapping("/purchases")
-    public Set<PurchaseBuyerDto> getAllOwnPurchases(@Positive @PathVariable(value = "userId") Long buyerId) {
+    public List<PurchaseBuyerDto> getAllOwnPurchases(@Positive @PathVariable(value = "userId") Long buyerId) {
         return service.getAllOwnPurchases(buyerId);
     }
 
     // Получить список своих продаж
     @GetMapping("/sales")
-    public Set<PurchaseDto> getAllOwnSales(@Positive @PathVariable(value = "userId") Long buyerId) {
+    public List<PurchaseDto> getAllOwnSales(@Positive @PathVariable(value = "userId") Long buyerId) {
         return service.getAllOwnSales(buyerId);
     }
 
     // Отказаться от покупки в течение суток после покупки
     @PostMapping("/{purchaseId}")
-    public PurchaseBuyerDto reject(@Positive @PathVariable(value = "userId") Long buyerId,
-                                   @Positive @PathVariable(value = "purchaseId") Long purchaseId) {
+    public RejectionDto reject(@Positive @PathVariable(value = "userId") Long buyerId,
+                               @Positive @PathVariable(value = "purchaseId") Long purchaseId) {
         return service.reject(buyerId, purchaseId);
     }
 
