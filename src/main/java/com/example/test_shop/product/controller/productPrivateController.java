@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Class of user's controller for {@link Product} entity
@@ -41,10 +42,20 @@ public class productPrivateController {
         return service.update(productDto, userId);
     }
 
+    // Подключение скидки (discountId) списку товаров (productsId)
+    @PatchMapping("/setDiscount")
+    public List<ProductDto> setDiscountForProductDet(
+            @RequestParam(value = "discountId") Long discountId,
+            @RequestParam(value = "productsId") Set<Long> productsSet,
+            @Positive @PathVariable(value = "userId") Long userId) {
+        return service.setDiscountForProductDet(discountId, productsSet, userId);
+    }
+
+
     // Удаление товара
     @DeleteMapping("{productId}")
     public ProductDto delete(@Positive @PathVariable(value = "userId") Long userId,
-                         @Positive @PathVariable(value = "productId") Long productId) {
+                             @Positive @PathVariable(value = "productId") Long productId) {
         return service.delete(userId, productId);
     }
 
@@ -59,7 +70,7 @@ public class productPrivateController {
     // Получе коментариев о товаре
     @GetMapping("{productId}")
     public List<CommentDto> getComments(@Positive @PathVariable(value = "userId") Long userId,
-                                       @Positive @PathVariable(value = "productId") Long productId) {
+                                        @Positive @PathVariable(value = "productId") Long productId) {
         return service.getComments(userId, productId);
     }
 

@@ -5,6 +5,7 @@ import com.example.test_shop.company.model.CompanyStatus;
 import com.example.test_shop.company.repository.CompanyRepository;
 import com.example.test_shop.exceptions.NotFoundException;
 import com.example.test_shop.exceptions.ValidationException;
+import com.example.test_shop.product.model.ProductStatus;
 import com.example.test_shop.product.repository.ProductRepository;
 import com.example.test_shop.product.model.Product;
 import com.example.test_shop.configuration.AppProperties;
@@ -48,15 +49,25 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     @Override
     public PurchaseBuyerDto add(NewPurchaseDto purchaseDto, Long userId) {
+
+        // Проверяем, существует и не заблокирован ли покупатель
         User buyer = checkAndGetUser(userId);
+
+        // Проверяем, существует и не заблокирована ли компания
+        Company sellCompany = checkAndGetCompany(purchaseDto.getCompanyId());
+
+        // Проверяем, существует и не заблокирован ли продавец
+        User seller = checkAndGetUser(sellCompany.getOwner().getId());
+
+        // Проверяем существует ли продукт, активен ли он, в достаточном ли он количестве и совпадает ли цена с уеной из базы
+        Product product = checkAndGetProduct(purchaseDto.getProductId(), purchaseDto.getPriceForUnit(),
+                purchaseDto.getQuantity());
+
+        // Проверяем достаточно ли у покупателя денег для покупки
         if (buyer.getBalance() < purchaseDto.getPriceForUnit() * purchaseDto.getQuantity()) {
             throw new ValidationException(String.format("User id=%s has low balance: %s, required: %s",
                     buyer.getId(), buyer.getBalance(), purchaseDto.getPriceForUnit() * purchaseDto.getQuantity()));
         }
-        Company sellCompany = checkAndGetCompany(purchaseDto.getCompanyId());
-        User seller = checkAndGetUser(sellCompany.getOwner().getId());
-        Product product = checkAndGetProduct(purchaseDto.getProductId(), purchaseDto.getPriceForUnit(),
-                purchaseDto.getQuantity());
 
         // Рассчитываем сумму покупки без учета скидки
         Double totalSumWithoutDiscount = product.getPrice() * purchaseDto.getQuantity();
@@ -89,14 +100,16 @@ public class PurchaseServiceImpl implements PurchaseService {
         Purchase purchase = Purchase.builder()
                 .type(PurchaseType.PURCHASE)
                 .company(sellCompany)
-                // Для сохранения информации при удвлении организации
+                // Для сохранения информации при в случае удаления компании из базы
                 .companyName(sellCompany.getName())
-                // Для сохранения информации при удвлении организации
+                // Для сохранения информации при в случае удаления компании из базы
                 .companyId(sellCompany.getId())
                 .seller(seller)
                 .buyer(buyer)
                 .product(product)
+                // Для сохранения информации при в случае удаления товара из базы
                 .productId(product.getId())
+                // Для сохранения информации при в случае удаления товара из базы
                 .productName(product.getName())
                 .quantity(purchaseDto.getQuantity())
                 .priceForUnit(purchaseDto.getPriceForUnit())
@@ -108,7 +121,7 @@ public class PurchaseServiceImpl implements PurchaseService {
                 .build();
         purchase = repository.save(purchase);
 
-        // Возвращаем BuyerPurchaseDto
+        // Возвращаем результат
         PurchaseBuyerDto purchaseBuyerDto = PurchaseMapper.toPurchaseBuyerDto(purchase);
         log.info("Purchase id={} successfully saved", purchase.getId());
         return purchaseBuyerDto;
@@ -118,7 +131,11 @@ public class PurchaseServiceImpl implements PurchaseService {
     @Transactional(readOnly = true)
     public List<PurchaseBuyerDto> getAllOwnPurchases(Long buyerId) {
         User buyer = checkAndGetUser(buyerId);
+
+        // Получаем список покупок по пользователю
         List<Purchase> purchasesSet = repository.findAllByBuyer(buyer);
+
+        // Возвращаем результат
         List<PurchaseBuyerDto> purchaseBuyerDtoSet = purchasesSet.stream()
                 .map(PurchaseMapper::toPurchaseBuyerDto)
                 .collect(Collectors.toList());
@@ -151,7 +168,7 @@ public class PurchaseServiceImpl implements PurchaseService {
                     purchase.getId(), purchase.getRejectionId()));
         }
 
-        // Мписываем сумму с продавца и осуществляем возврат денег покупателю
+        // Списываем сумму с продавца и осуществляем возврат денег покупателю
         seller.setBalance(seller.getBalance() - purchase.getSellerIncomeSum());
         buyer.setBalance(buyer.getBalance() + purchase.getTotalSumWithDiscount());
         userRepository.save(seller);
@@ -166,14 +183,16 @@ public class PurchaseServiceImpl implements PurchaseService {
         Purchase reject = Purchase.builder()
                 .type(PurchaseType.REJECT)
                 .company(purchase.getCompany())
-                // Для сохранения информации при удвлении организации
+                // Для сохранения информации при в случае удаления компании из базы
                 .companyName(purchase.getCompanyName())
-                // Для сохранения информации при удвлении организации
+                // Для сохранения информации при в случае удаления компании из базы
                 .companyId(purchase.getCompanyId())
                 .seller(purchase.getSeller())
                 .buyer(purchase.getBuyer())
                 .product(purchase.getProduct())
+                // Для сохранения информации при в случае удаления товара из базы
                 .productId(purchase.getProduct().getId())
+                // Для сохранения информации при в случае удаления товара из базы
                 .productName(purchase.getProduct().getName())
                 .quantity(purchase.getQuantity())
                 .priceForUnit(purchase.getPriceForUnit())
@@ -194,6 +213,7 @@ public class PurchaseServiceImpl implements PurchaseService {
         purchase.setRejectionId(reject.getId());
         repository.save(purchase);
 
+        // Возвращаем результат
         RejectionDto rejectDto = PurchaseMapper.toRejectionDto(reject);
         log.info("Reject id={} for purchases id={} successfully created", reject.getId(), purchase.getId());
         return rejectDto;
@@ -202,7 +222,11 @@ public class PurchaseServiceImpl implements PurchaseService {
     @Override
     public List<PurchaseDto> getAllOwnSales(Long sellerId) {
         User buyer = checkAndGetUser(sellerId);
+
+        // Получаем список покупок по продавцу
         List<Purchase> sellsSet = repository.findAllBySeller(buyer);
+
+        // Возвращаем результат
         List<PurchaseDto> sellsDtoSet = sellsSet.stream()
                 .map(PurchaseMapper::toPurchaseDto)
                 .collect(Collectors.toList());
@@ -220,6 +244,8 @@ public class PurchaseServiceImpl implements PurchaseService {
     }
 
     private Company checkAndGetCompany(Long companyId) {
+
+        // Проверяем существует ли компания и актвна ли она
         Company company = companyRepository.findById(companyId).
                 orElseThrow(() -> new NotFoundException(String.format("Company id=%s not found", companyId)));
         if (company.getStatus().equals(CompanyStatus.BLOCKED)) {
@@ -233,15 +259,33 @@ public class PurchaseServiceImpl implements PurchaseService {
     }
 
     private Product checkAndGetProduct(Long productId, Double priceForUnit, Integer quantity) {
+
+        // Проверяем существует ли продукт и актвен ли он
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NotFoundException(String.format("Product id=%s not found", productId)));
+        if(Objects.equals(product.getStatus(), ProductStatus.BLOCKED)){
+            throw new ValidationException(String.format("Product id=%s is blocked", productId));
+        }
+        if(Objects.equals(product.getStatus(), ProductStatus.DELETED)){
+            throw new ValidationException(String.format("Product id=%s is deleted", productId));
+        }
+
+        // Проверяем достаточно ли количество продукта
         if (product.getQuantity() < quantity) {
             throw new ValidationException(String.format("Quantity of product id=%s in store: %s, required: %s",
                     productId, product.getQuantity(), quantity));
         }
-        if (!Objects.equals(product.getPrice(), priceForUnit)) {
+
+        // Проверяем совпадает ли цена продукта их базы с ценой в звявке на покупку
+        Double priceOfProductWithDiscount;
+        if (product.getDiscount() != null) {
+            priceOfProductWithDiscount = product.getPrice() - (product.getPrice() * product.getDiscount().getValue());
+        } else {
+            priceOfProductWithDiscount = product.getPrice();
+        }
+        if (!Objects.equals(priceOfProductWithDiscount, priceForUnit)) {
             throw new ValidationException(String.format("Price for unit of product id=%s is: %s, required: %s",
-                    productId, product.getPrice(), priceForUnit));
+                    productId, priceForUnit, priceOfProductWithDiscount));
         }
         return product;
     }

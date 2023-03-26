@@ -1,6 +1,5 @@
 package com.example.test_shop.purchase.repository;
 
-import com.example.test_shop.company.model.Company;
 import com.example.test_shop.purchase.model.Purchase;
 import com.example.test_shop.user.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;

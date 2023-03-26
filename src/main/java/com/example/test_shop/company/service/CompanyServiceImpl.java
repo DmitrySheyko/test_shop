@@ -43,10 +43,14 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public CompanyDto add(NewCompanyDto companyDto, Long userId) {
         User owner = checkIsUserExistAndActive(userId);
+
+        // Генерируем новую компанию из Dto и добавляем исходные данные
         Company newCompany = CompanyMapper.toCompany(companyDto);
         newCompany.setOwner(owner);
         newCompany.setStatus(CompanyStatus.PENDING);
         newCompany = repository.save(newCompany);
+
+        // Возвращаем результат
         CompanyDto newCompanyDto = CompanyMapper.toDto(newCompany);
         log.info("Company id={} successfully created", newCompany.getId());
         return newCompanyDto;
@@ -66,6 +70,7 @@ public class CompanyServiceImpl implements CompanyService {
         productList.forEach(product -> product.setStatus(ProductStatus.DELETED));
         productRepository.saveAll(productList);
 
+        // Возвращаем результат
         CompanyDto companyDto = CompanyMapper.toDto(company);
         log.info("Company id={} successfully deleted", companyId);
         return companyDto;
@@ -76,10 +81,14 @@ public class CompanyServiceImpl implements CompanyService {
         Company companyFromRepository = repository.findById(companyId).orElseThrow(() -> new NotFoundException(String
                 .format("Company didn't update. Company id=%s not found", companyId)));
 
+        // Генерируем скидку на основании данных из Dto
         Company companyForUpdate = CompanyMapper.toCompany(companyDto);
+
+        // Если параметры компании из Dto не равны null заменяем ими парметры компании из базы. Сохраняем обновленную компанию
         companyFromRepository.setStatus(Optional.ofNullable(companyForUpdate.getStatus()).orElse(companyFromRepository.getStatus()));
         companyFromRepository = repository.save(companyFromRepository);
 
+        // Возвращаем результат
         CompanyDto updatedCompanyDto = CompanyMapper.toDto(companyFromRepository);
         log.info("Company id={} successfully updated", companyId);
         return updatedCompanyDto;
@@ -89,13 +98,19 @@ public class CompanyServiceImpl implements CompanyService {
     @Transactional(readOnly = true)
     public List<CompanyDto> searchCompany(Set<Long> companiesId, String name, Set<String> statusesString,
                                           Set<Long> ownersId, String description) {
+
+        // Если в параметрах поиска задан статус компании. переводим его в String
         Set<CompanyStatus> statusesEnum;
         if (statusesString != null && !statusesString.isEmpty()) {
             statusesEnum = statusesString.stream().map(CompanyStatus::valueOf).collect(Collectors.toSet());
         } else {
             statusesEnum = null;
         }
+
+        // Осуществяем поиск по параметрам
         List<Company> companiesList = repository.searchCompany(companiesId, name, statusesEnum, ownersId, description);
+
+        // Возвращаем результат
         List<CompanyDto> companiesDtoList = companiesList.stream().map(CompanyMapper::toDto).toList();
         log.info("Set of companies successfully received");
         return companiesDtoList;

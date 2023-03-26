@@ -8,6 +8,7 @@ import com.example.test_shop.product.dto.ProductUpdateDto;
 import com.example.test_shop.product.model.Product;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Interface of service for {@link Product} entity
@@ -25,5 +26,7 @@ public interface ProductService {
     List<ProductShortDto> getAllActive(Long userId, Integer from, Integer size);
 
     List<CommentDto> getComments(Long userId, Long productId);
+
+    List<ProductDto> setDiscountForProductDet(Long discountId, Set<Long> productsSet, Long userId);
 
 }

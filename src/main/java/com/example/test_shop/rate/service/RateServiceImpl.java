@@ -38,24 +38,28 @@ public class RateServiceImpl implements RateService {
 
     @Override
     public RateDto add(NewRateDto rateDto, Long userId) {
+
         // Проверяем покупал ли пользвательданный товар
         Optional<Purchase> optionalPurchase = purchaseRepository.findFirstByBuyerIdAndProductId(userId, rateDto.getProductId());
         if (optionalPurchase.isEmpty()) {
             throw new NotFoundException(String.format("User id=%s couldn't add rate to product id=%s", userId,
                     rateDto.getProductId()));
         }
+
         // Проверяем ставил ли пользователь оценку данному товару
         if (repository.existsByUserIdAndProductId(userId, rateDto.getProductId())) {
             throw new ValidationException(String.format("User id=%s already add rate to product id=%s", userId,
                     rateDto.getProductId()));
         }
-        // Сохраняем оценку
+
+        // Генерируем новую оценку на снове данных из Dtj и сохраняем ее
         Rate newRate = RateMapper.toRate(rateDto);
         newRate.setUser(optionalPurchase.get().getBuyer());
         newRate.setProduct(optionalPurchase.get().getProduct());
         newRate.setCreatedOn(LocalDateTime.now());
         newRate = repository.save(newRate);
 
+        // Возвращаем результат
         RateDto newRateDto = RateMapper.toDto(newRate);
         log.info("Rate id={} successfully add", newRateDto.getId());
         return newRateDto;
@@ -64,7 +68,6 @@ public class RateServiceImpl implements RateService {
 
     @Override
     public String delete(Long userId, Long rateId) {
-        // Проверяем существует и не заблокирован ли пользователь
         User user = checkIsUserExistAndActive(userId);
 
         // Проверяем существует ли оценка с требуемыми userId и rateId
@@ -72,6 +75,7 @@ public class RateServiceImpl implements RateService {
         if (optionalRate.isEmpty()) {
             throw new NotFoundException(String.format("Rate id=%s from user id=%s not found", rateId, userId));
         }
+        // Возвращаем результат
         repository.delete(optionalRate.get());
         log.info("Rate id={} successfully deleted", rateId);
         return String.format("Rate id=%s successfully deleted", rateId);
@@ -85,4 +89,5 @@ public class RateServiceImpl implements RateService {
         }
         return user;
     }
+
 }

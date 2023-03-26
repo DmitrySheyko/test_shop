@@ -26,14 +26,14 @@ class PurchaseServiceImplTest {
                 .companyId(1L)
                 .productId(1L)
                 .quantity(3)
-                .priceForUnit(1000.0)
+                .priceForUnit(900.0)
                 .build();
         PurchaseBuyerDto purchaseDto = purchaseService.add(newPurchaseDto, 3L);
         assertEquals("PURCHASE", purchaseDto.getType());
         assertEquals(3, purchaseDto.getBuyer().getId());
         assertEquals(1, purchaseDto.getProduct().getId());
         assertEquals(3, purchaseDto.getQuantity());
-        assertEquals(1000.00, purchaseDto.getPriceForUnit());
+        assertEquals(900.00, purchaseDto.getPriceForUnit());
         assertEquals(3000.00, purchaseDto.getTotalSumWithoutDiscount());
         assertEquals(2700.00, purchaseDto.getTotalSumWithDiscount());
         assertEquals(300.00, purchaseDto.getDiscountSum());
@@ -56,7 +56,7 @@ class PurchaseServiceImplTest {
                 .companyId(1L)
                 .productId(1L)
                 .quantity(1)
-                .priceForUnit(1000.0)
+                .priceForUnit(900.0)
                 .build();
         PurchaseBuyerDto purchaseDto = purchaseService.add(newPurchaseDto, 3L);
 
@@ -67,7 +67,7 @@ class PurchaseServiceImplTest {
         assertEquals(3, rejectionDto.getBuyer().getId());
         assertEquals(4, rejectionDto.getRejectForPurchaseId());
         assertEquals(1, rejectionDto.getQuantity());
-        assertEquals(1000.0, rejectionDto.getPriceForUnit());
+        assertEquals(900.0, rejectionDto.getPriceForUnit());
         assertEquals(1000.0, rejectionDto.getTotalSumWithoutDiscount());
         assertEquals(900.0, rejectionDto.getTotalSumWithDiscount());
         assertEquals(45.0, rejectionDto.getShopCommissionSum());

@@ -55,6 +55,7 @@ public class ProductServiceImpl implements ProductService {
         Company company = checkIsCompanyExistAndActive(productDto.getCompanyId());
         Discount discount = checkIsDiscountExist(productDto.getDiscountId());
 
+        // Генерируем новый продукт на основе данныз из Dto и сохраняем го
         Product newProduct = Product.builder()
                 .name(productDto.getName())
                 .description(productDto.getDescription())
@@ -67,8 +68,9 @@ public class ProductServiceImpl implements ProductService {
                 .status(ProductStatus.ACTIVE)
                 .ratesList(new ArrayList<>())
                 .build();
-
         newProduct = repository.save(newProduct);
+
+        // Возвращаем результат
         ProductDto newProductDto = ProductMapper.toDto(newProduct);
         log.info("Product id={} successfully add", newProduct.getId());
         return newProductDto;
@@ -77,9 +79,14 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDto update(ProductUpdateDto productDto, Long userId) {
         checkIsUserExistAndActive(userId);
+
+        // Получаем из базы продукт который надо обновить
         Product productFromRepository = checkAndGetProduct(productDto.getId());
+
+        // Генерируем из Dto продукт с новыми параметрами
         Product productForUpdate = ProductMapper.toProduct(productDto);
 
+        // Если параметры продукта из Dto не равны null заменяем парметры продукта из базы. Сохраняем обновленный продукт
         productFromRepository.setName(Optional.ofNullable(productForUpdate.getName())
                 .orElse(productFromRepository.getName()));
         productFromRepository.setDescription(Optional.ofNullable(productForUpdate.getDescription())
@@ -98,7 +105,9 @@ public class ProductServiceImpl implements ProductService {
             Discount discount = checkAndGetDiscount(productDto.getDiscountId());
             productFromRepository.setDiscount(discount);
         }
+        repository.save(productFromRepository);
 
+        // Возвращаем результат
         ProductDto updatedProductDto = ProductMapper.toDto(productFromRepository);
         log.info("Product id={} successfully updated", productFromRepository.getId());
         return updatedProductDto;
@@ -109,10 +118,11 @@ public class ProductServiceImpl implements ProductService {
         checkIsUserExistAndActive(userId);
         Product product = checkAndGetProduct(productId);
 
-        // Меняестатус продукта на DELETE, из базы не удаляем
+        // Меняем статус продукта на DELETE, из базы не удаляем
         product.setStatus(ProductStatus.DELETED);
         repository.save(product);
 
+        // Возвращаем результат
         ProductDto productDto = ProductMapper.toDto(product);
         log.info("Product id={} successfully deleted", productId);
         return productDto;
@@ -121,12 +131,16 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductShortDto> getAllActive(Long userId, Integer from, Integer size) {
         checkIsUserExistAndActive(userId);
+
+        // Настраиваем пагинацию
         int page = from / size;
         Pageable pageable = PageRequest.of(page, size, Sort.by("id"));
 
         // получаем из базы товары имеющие статус Active принадлежащие компаниям имеющим статус Active
         Page<Product> productsPage = repository.findAllByStatusAndCompanyStatus(ProductStatus.ACTIVE,
                 CompanyStatus.ACTIVE, pageable);
+
+        // Возвращаем результат
         List<ProductShortDto> productsList = productsPage.stream().map(ProductMapper::toShortDto).toList();
         log.info("List of products successfully received");
         return productsList;
@@ -136,18 +150,41 @@ public class ProductServiceImpl implements ProductService {
     public List<CommentDto> getComments(Long userId, Long productId) {
         checkIsUserExistAndActive(userId);
         Product product = checkAndGetProduct(productId);
+
+        // Получаем список комментариев к продукту
         List<Comment> commentList = product.getCommentsList();
+
+        // Возвращаем результат
         List<CommentDto> commentDtoList = commentList.stream().map(CommentMapper::toDto).collect(Collectors.toList());
-        log.info("Set of comments for product id={} successfully received", productId);
+        log.info("List of comments for product id={} successfully received", productId);
         return commentDtoList;
     }
 
-    private void checkIsUserExistAndActive(Long userId) {
+    @Override
+    public List<ProductDto> setDiscountForProductDet(Long discountId, Set<Long> productsSet, Long userId) {
+        User user = checkIsUserExistAndActive(userId);
+        Discount discount = checkAndGetDiscount(discountId);
+
+        // Получаем список товаров с Id из списка и принадлежащих пользователю
+        List<Product> productList = repository.findAllByCompanyOwnerAndIdIn(user, productsSet);
+
+        // Полученным компаниям устанавливаем скидку
+        productList.forEach(product -> product.setDiscount(discount));
+        productList = repository.saveAll(productList);
+
+        // Возвращаем результат
+        List<ProductDto> productDtoList = productList.stream().map(ProductMapper::toDto).toList();
+        log.info("List of products successfully get discount id={}", discountId);
+        return productDtoList;
+    }
+
+    private User checkIsUserExistAndActive(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(String
                 .format("Product didn't add. User id=%s not found", userId)));
         if (Objects.equals(user.getStatus(), UserStatus.BLOCKED)) {
             throw new ValidationException(String.format("User id=%s is blocked", userId));
         }
+        return user;
     }
 
     private Company checkIsCompanyExistAndActive(Long companyId) {

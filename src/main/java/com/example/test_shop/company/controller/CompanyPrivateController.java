@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("user/{userId}/company")
-public class CompanyUserController {
+public class CompanyPrivateController {
 
     private final CompanyService service;
 

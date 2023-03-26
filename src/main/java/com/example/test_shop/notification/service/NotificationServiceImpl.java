@@ -34,11 +34,13 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public NotificationDto add(NewNotificationDto notificationDto) {
-        User user = userRepository.findById(notificationDto.getUserId())
-                .orElseThrow(() -> new NotFoundException(String
-                        .format("Notification didn't add. User id=%s not found", notificationDto.getUserId())));
+        User user = checkAndGetUser(notificationDto.getUserId());
+
+        // Генерируем новое уведомление из Dto  и сохраняем его
         Notification newNotification = NotificationMapper.toNotification(notificationDto, user);
         newNotification = repository.save(newNotification);
+
+        // Возвращаем результат
         NotificationDto newNotificationDto = NotificationMapper.toDto(newNotification);
         log.info("Notification id={} successfully add", newNotification.getId());
         return newNotificationDto;
@@ -48,7 +50,11 @@ public class NotificationServiceImpl implements NotificationService {
     @Transactional(readOnly = true)
     public Set<NotificationDto> getAllByUserId(Long userId) {
         User user = checkAndGetUser(userId);
+
+        // Получаем список уведомьений по пользователю
         Set<Notification> notificationSet = repository.findAllByUser(user);
+
+        // Возвращаем результат
         Set<NotificationDto> notificationDtoSet = notificationSet.stream()
                 .map(NotificationMapper::toDto)
                 .collect(Collectors.toSet());
