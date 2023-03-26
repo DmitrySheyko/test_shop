@@ -37,7 +37,7 @@ public class Product {
     @Column(name = "description")
     private String description;
 
-    @ManyToOne (cascade = CascadeType.REMOVE)
+    @ManyToOne
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
 
@@ -51,7 +51,7 @@ public class Product {
     @JoinColumn(name = "discount_id", nullable = false)
     private Discount discount;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
     private List<Comment> commentsList = new ArrayList<>();
 
     @Column(name = "key_words")
@@ -60,7 +60,7 @@ public class Product {
     @Column(name = "characteristics")
     private String characteristics;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
     private List<Rate> ratesList = new ArrayList<>();
 
     @OneToMany(mappedBy = "product")

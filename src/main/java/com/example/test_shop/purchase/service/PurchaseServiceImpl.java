@@ -3,6 +3,7 @@ package com.example.test_shop.purchase.service;
 import com.example.test_shop.company.model.Company;
 import com.example.test_shop.company.model.CompanyStatus;
 import com.example.test_shop.company.repository.CompanyRepository;
+import com.example.test_shop.discount.model.Discount;
 import com.example.test_shop.exceptions.NotFoundException;
 import com.example.test_shop.exceptions.ValidationException;
 import com.example.test_shop.product.model.ProductStatus;
@@ -72,8 +73,16 @@ public class PurchaseServiceImpl implements PurchaseService {
         // Рассчитываем сумму покупки без учета скидки
         Double totalSumWithoutDiscount = product.getPrice() * purchaseDto.getQuantity();
 
-        // Расчитываем сумму скидки
-        Double discountSum = totalSumWithoutDiscount * product.getDiscount().getValue();
+        // Проверяем действительна ли скидка и расчитываем сумму скидки
+        double discountSum;
+        Discount discount = product.getDiscount();
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        if (discount != null && (currentDateTime.isAfter(discount.getStartDateTime()) ||
+                currentDateTime.isBefore(discount.getFinishDateTime()))) {
+            discountSum = totalSumWithoutDiscount * discount.getValue();
+        } else {
+            discountSum = 0.0;
+        }
 
         // Рассчитываем сумму покупки с учетщм скидки
         Double totalSumWithDiscount = totalSumWithoutDiscount - discountSum;
@@ -263,10 +272,10 @@ public class PurchaseServiceImpl implements PurchaseService {
         // Проверяем существует ли продукт и актвен ли он
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NotFoundException(String.format("Product id=%s not found", productId)));
-        if(Objects.equals(product.getStatus(), ProductStatus.BLOCKED)){
+        if (Objects.equals(product.getStatus(), ProductStatus.BLOCKED)) {
             throw new ValidationException(String.format("Product id=%s is blocked", productId));
         }
-        if(Objects.equals(product.getStatus(), ProductStatus.DELETED)){
+        if (Objects.equals(product.getStatus(), ProductStatus.DELETED)) {
             throw new ValidationException(String.format("Product id=%s is deleted", productId));
         }
 

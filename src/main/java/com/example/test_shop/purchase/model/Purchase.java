@@ -46,11 +46,11 @@ public class Purchase {
     private String companyName;
 
     @ManyToOne
-    @JoinColumn(name = "seller_id",nullable = false)
+    @JoinColumn(name = "seller_id")
     private User seller;
 
     @ManyToOne
-    @JoinColumn(name = "buyer_id", nullable = false)
+    @JoinColumn(name = "buyer_id")
     private User buyer;
     
     @ManyToOne

@@ -17,4 +17,7 @@ public interface NotificationService {
 
 
     Set<NotificationDto> getAllByUserId(Long userId);
+
+    String delete(Long notificationId);
+
 }

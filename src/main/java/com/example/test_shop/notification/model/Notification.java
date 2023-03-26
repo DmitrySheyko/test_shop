@@ -30,7 +30,7 @@ public class Notification {
     @Column(name = "text")
     private String text;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 

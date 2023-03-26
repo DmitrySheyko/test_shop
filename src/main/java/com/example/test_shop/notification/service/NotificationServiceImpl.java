@@ -62,6 +62,17 @@ public class NotificationServiceImpl implements NotificationService {
         return notificationDtoSet;
     }
 
+    @Override
+    public String delete(Long notificationId) {
+        Notification notification = repository.findById(notificationId)
+                .orElseThrow(() -> new NotFoundException(String.format("Notification id=%s not found", notificationId)));
+        repository.delete(notification);
+
+        // Возвращаем результат
+        log.info("Notifications for user id={} successfully deleted", notificationId);
+        return String.format("Notifications for user id=%s successfully deleted", notificationId);
+    }
+
     private User checkAndGetUser(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(String.format("User id=%s not found", userId)));
