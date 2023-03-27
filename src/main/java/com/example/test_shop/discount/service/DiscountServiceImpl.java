@@ -8,7 +8,6 @@ import com.example.test_shop.discount.model.Discount;
 import com.example.test_shop.discount.repository.DiscountRepository;
 import com.example.test_shop.exceptions.NotFoundException;
 import com.example.test_shop.exceptions.ValidationException;
-import com.example.test_shop.product.model.Product;
 import com.example.test_shop.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * Class of service for {@link Discount} entity
@@ -76,15 +74,16 @@ public class DiscountServiceImpl implements DiscountService {
         Discount discount = repository.findById(discountId)
                 .orElseThrow(() -> new NotFoundException(String.format("Discount id=%s not found", discountId)));
 
-        // Ищу все товары на которые действует данная скидка
-        Set<Product> productsSet = productRepository.findAllByDiscount(discount);
-
-        // Удаляум скидку из всех найденных товаров и сохраняем их
-        if (!productsSet.isEmpty()) {
-            for (Product product : productsSet)
-                product.setDiscount(null);
-        }
-        productRepository.saveAll(productsSet);
+        repository.delete(discount);
+//        // Ищу все товары на которые действует данная скидка
+//        Set<Product> productsSet = productRepository.findAllByDiscount(discount);
+//
+//        // Удаляум скидку из всех найденных товаров и сохраняем их
+//        if (!productsSet.isEmpty()) {
+//            for (Product product : productsSet)
+//                product.setDiscount(null);
+//        }
+//        productRepository.saveAll(productsSet);
 
         // Возвращаем результат
         log.info("Discount id={} successfully deleted", discountId);

@@ -18,7 +18,7 @@ import java.time.format.DateTimeFormatter;
 @Component
 public class DiscountMapper {
 
-    private static final DateTimeFormatter DATE_TIME_PATTERN= DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter DATE_TIME_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public static Discount toDiscount(NewDiscountDto discountDto) {
         if (discountDto == null) {
@@ -44,8 +44,8 @@ public class DiscountMapper {
             return Discount.builder()
                     .description(discountDto.getDescription())
                     .value(discountDto.getValue())
-                    .startDateTime(discountDto.getStartDateTime())
-                    .finishDateTime(discountDto.getFinishDateTime())
+                    .startDateTime(toDateTime(discountDto.getStartDateTime()))
+                    .finishDateTime(toDateTime(discountDto.getFinishDateTime()))
                     .build();
         }
     }

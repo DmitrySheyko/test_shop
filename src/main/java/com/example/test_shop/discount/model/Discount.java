@@ -40,7 +40,7 @@ public class Discount {
     @Column(name = "finish_date_time")
     private LocalDateTime finishDateTime;
 
-    @OneToMany
+    @OneToMany(mappedBy = "discount")
     private Set<Product> productsSet = new HashSet<>();
 
 }

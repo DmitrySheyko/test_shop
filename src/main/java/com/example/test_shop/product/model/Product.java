@@ -48,7 +48,7 @@ public class Product {
     private Integer quantity;
 
     @ManyToOne
-    @JoinColumn(name = "discount_id", nullable = false)
+    @JoinColumn(name = "discount_id")
     private Discount discount;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)

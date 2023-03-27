@@ -8,8 +8,6 @@ import jakarta.validation.constraints.Positive;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 /**
  * Class of dto for update {@link Discount} entity
  *
@@ -26,9 +24,9 @@ public class DiscountAdminUpdateDto {
     private Double value;
 
     @FutureOrPresent
-    private LocalDateTime startDateTime;
+    private String startDateTime;
 
     @Future
-    private LocalDateTime finishDateTime;
+    private String finishDateTime;
 
 }
